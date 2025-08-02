@@ -122,7 +122,7 @@ void PlaySceneInit()
 }
 void PlaySceneUpdate()
 {
-	
+	PlayerUpdate();
 	patternPlanet = (walkCounter / 6)% 77;
 
 	walkCounter++;
@@ -163,7 +163,7 @@ void PlaySceneUpdate()
 
 void PlaySceneDraw()
 {
-
+	
 
 	//DrawRotaGraph(500, 500,1.0,45,lines,false, false);
 	DrawGraph(0, 0, galaxy, true);

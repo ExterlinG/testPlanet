@@ -9,4 +9,4 @@ void PlayerReset();
 
 bool PlayerIsDead();
 void PlayerMove();
-void MoveControllerTo(int x, int y);
+void MoveControllerTo(float x, float y);
