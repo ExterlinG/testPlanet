@@ -12,3 +12,4 @@ void CalculatePlanetAngles(double planetAngle[]);
 void CalculateExtraAngles(double extraAngles[]);
 void DrawExtraLines(double extraAngles[]);
 void DrawLines(double planetAngle[]);
+void HandleShipControls();

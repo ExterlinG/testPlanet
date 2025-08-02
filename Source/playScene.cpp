@@ -7,6 +7,7 @@
 #include "math.h"
 #include <vector>
 #include "planet.h"
+#include "ship.h"
 
 
 namespace {
@@ -82,6 +83,7 @@ namespace {
 	double enemyPosX = 848.0f;	//エネミーの座標
 	double enemyPosY = 96.0f;
 
+	
 
 	//debug
 	int color;
@@ -112,6 +114,7 @@ void PlaySceneInit()
 	}
 	PlanetInit();
 	PlayerInit();
+	ShipInit();
 	walkCounter= 0;
 	patternLine = 0;
 	patternPlanet = 0;
@@ -126,6 +129,7 @@ void PlaySceneUpdate()
 {
 	PlayerUpdate();
 	PlanetUpdate();
+	ShipUpdate();
 	patternPlanet = (walkCounter / 6)% 77;
 
 	walkCounter++;
@@ -192,6 +196,7 @@ void PlaySceneDraw()
 		}
 
 		PlanetDraw();
+		ShipDraw();
 		//DrawRectGraph(planet[18].x, planet[18].y, patternPlanet *96, 0, 96, 96, groundImage, true, false); //middle
 		//DrawRectGraph(planet[17].x, planet[17].y, patternPlanet * 96, 0, 96, 96, groundImage, true, false); //grey 15
 		//DrawRectGraph(planet[16].x, planet[16].y, patternPlanet * 96, 0, 96, 96, groundImage, true, false); //grey 14
@@ -381,3 +386,4 @@ void DrawLines(double planetAngle[])
 		}
 	}
 }
+

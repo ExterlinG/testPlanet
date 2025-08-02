@@ -25,6 +25,7 @@
     <ClCompile Include="Source\planet.cpp" />
     <ClCompile Include="Source\player.cpp" />
     <ClCompile Include="Source\playScene.cpp" />
+    <ClCompile Include="Source\ship.cpp" />
     <ClCompile Include="Source\titleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -34,6 +35,7 @@
     <ClInclude Include="Source\planet.h" />
     <ClInclude Include="Source\player.h" />
     <ClInclude Include="Source\playScene.h" />
+    <ClInclude Include="Source\ship.h" />
     <ClInclude Include="Source\struct.h" />
     <ClInclude Include="Source\titleScene.h" />
   </ItemGroup>

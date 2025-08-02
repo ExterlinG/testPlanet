@@ -1,13 +1,15 @@
 #pragma once
 
-enum PlanetType {
+enum PlanetType 
+{
     NEUTRAL,
     PLAYER,
     ENEMY1,
     ENEMY2
 };
 
-struct Planet {
+struct Planet 
+{
     int positionIndex;  // „I„~„t„u„{„ƒ „r „}„p„ƒ„ƒ„y„r„u line[]
     PlanetType type;
     int shipsCount = 0;

@@ -5,6 +5,7 @@
 #include "player.h"
 #include <vector>
 #include <unordered_map>
+#include "ship.h"
 
 
 namespace
@@ -191,10 +192,21 @@ namespace
 	bool pressLeft = false;
     bool pressUp = false;
     bool pressDown = false;
+    bool pressA = false;
+    int selectedPlanetIndex = -1;
 }
 void Collision();
 void Move();
 void DeadFall();
+int FindPlanetIndex(int position) {
+    for (size_t i = 0; i < planets.size(); i++) {
+        if (planets[i].positionIndex == position) {
+            return i;
+        }
+    }
+    return -1;
+}
+
 void PlayerInit()
 {
 	currentPosition = 0; // Текущая позиция в массиве line
@@ -280,6 +292,42 @@ void PlayerMove()
 	pressLeft = pressedLeft;
     pressUp = pressedUp;
     pressDown = pressedDown;
+
+    // 2. Обработка выбора и отправки кораблей (клавиша A)
+    bool pressedA = (key & PAD_INPUT_A) != 0;
+
+    if (pressedA && !pressA) {
+        int planetIndex = FindPlanetIndex(currentPosition);
+
+        if (planetIndex != -1) {
+            // Если это первое нажатие и планета игрока
+            if (selectedPlanetIndex == -1 && planets[planetIndex].type == PLAYER) {
+                selectedPlanetIndex = planetIndex;
+            }
+            // Если это второе нажатие на другую планету
+            else if (selectedPlanetIndex != -1 && selectedPlanetIndex != planetIndex) {
+                // Проверяем допустимость перехода
+                bool validTransition = false;
+                const auto& transitions = transitionMap.at(planets[selectedPlanetIndex].positionIndex);
+                for (const auto& trans : transitions) {
+                    if (trans.second == planets[planetIndex].positionIndex) {
+                        validTransition = true;
+                        break;
+                    }
+                }
+
+                if (validTransition) {
+                    // Отправляем все корабли
+                    int shipCount = planets[selectedPlanetIndex].shipsCount;
+                    SendShips(selectedPlanetIndex, planetIndex, shipCount);
+                }
+                selectedPlanetIndex = -1;
+            }
+        }
+    }
+    pressA = pressedA;
+
+
 	VectorI2 newPosition = line[currentPosition];
 	MoveControllerTo(newPosition.x, newPosition.y);
 }
