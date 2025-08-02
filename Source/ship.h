@@ -5,20 +5,18 @@
 #include "struct.h"
 
 
-struct Ship 
-{
+struct Ship {
     int fromPlanetIndex;
     int toPlanetIndex;
     int count;
-    float progress; // 0.0 - 1.0
+    float progress;
     int startTime;
-    int graphicHandle; // „D„|„‘ „p„~„y„}„p„ˆ„y„y „{„€„‚„p„q„|„‘
 };
 
 
-    std::vector<Ship> activeShips;
-    const float SHIP_SPEED = 5.0f; // 5 „ƒ„u„{„…„~„t „~„p „„u„‚„u„}„u„‹„u„~„y„u
-    int shipGraphic = -1;
+    //std::vector<Ship> activeShips;
+    //const float SHIP_SPEED = 5.0f; // 5 „ƒ„u„{„…„~„t „~„p „„u„‚„u„}„u„‹„u„~„y„u
+    //int shipGraphic = -1;
 
 
     void ShipInit();
@@ -30,4 +28,4 @@ struct Ship
     void ShipReset();
 
     // „D„|„‘ „r„y„x„…„p„|„y„x„p„ˆ„y„y „r„„q„€„‚„p
-    static void DrawSelectionCircle(const VectorI2& position);
+    //static void DrawSelectionCircle(const VectorI2& position);

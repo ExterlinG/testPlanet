@@ -6,19 +6,20 @@
 #include <vector>
 #include <unordered_map>
 #include "planet.h"
+#include "globalGameData.h"
 namespace
 {
     // ÑCÑ|ÑÄÑqÑpÑ|ÑéÑ~ÑçÑu ÑÅÑuÑÇÑuÑ}ÑuÑ~Ñ~ÑçÑu
     static const float PLANET_CENTER = 48.0;
-    VectorI2 line[] = { {689,128},{848, 96},{1008, 128},
-                    {1136, 224},{1192, 368},{1096, 509},
-                    {1456, 428},{1408, 592},{1280, 720},
-                    {1104, 768},{944, 704},{848, 560},
-                    {848.5, 911},{704, 800},{624, 640},
-                    {655, 464},{785, 352},{960, 336},{960,476} };
-    const int line_size = sizeof(line) / sizeof(line[0]);
+    //VectorI2 line[] = { {689,128},{848, 96},{1008, 128},
+    //                {1136, 224},{1192, 368},{1096, 509},
+    //                {1456, 428},{1408, 592},{1280, 720},
+    //                {1104, 768},{944, 704},{848, 560},
+    //                {848.5, 911},{704, 800},{624, 640},
+    //                {655, 464},{785, 352},{960, 336},{960,476} };
+    //const int line_size = sizeof(line) / sizeof(line[0]);
 
-    std::vector<Planet> planets;
+    //std::vector<Planet> planets;
     const int MAX_SHIPS = 50;
     const int SPAWN_INTERVAL = 1000; // 1 ÑÉÑuÑ{ÑÖÑ~ÑtÑp Ñr Ñ}ÑyÑ|Ñ|ÑyÑÉÑuÑ{ÑÖÑ~ÑtÑpÑá
 
