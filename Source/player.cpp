@@ -41,7 +41,8 @@ namespace
 		{18, 11}, {17, 5},{15, 11}
 	};
 	//----------------------------------------------
-
+	float startPosX;
+	float startPosY;
 
 }
 void Collision();
@@ -49,7 +50,8 @@ void Move();
 void DeadFall();
 void PlayerInit()
 {
-	
+	startPosX = line[0].x;
+	startPosY = line[0].y;
 	
 	if (humanShipImage < 0) {
 		humanShipImage = LoadGraph("data\\texture\\humanShip\\battlecruiser.png");
@@ -84,7 +86,7 @@ void PlayerDraw()
 {
 	
 	DrawRectGraph((int)pos.x, (int)pos.y, cell.x * 80, cell.y * 80, 96, 112, humanShipImage, true, xFlip);
-	DrawCircle(line[0].x + PLANET_CENTER, line[0].y + PLANET_CENTER, 35, 0XFFFFFF, false, 5.0f);
+	DrawCircle(startPosX + PLANET_CENTER, startPosY + PLANET_CENTER, 35, 0XFFFFFF, false, 5.0f);
 }
 void PlayerRelease()
 {
@@ -96,13 +98,17 @@ void PlayerRelease()
 
 void PlayerMove()
 {
+	int currentPosition = 0; // „S„u„{„…„‹„p„‘ „„€„x„y„ˆ„y„‘ „r „}„p„ƒ„ƒ„y„r„u line
+	bool movingRight = true; // „N„p„„‚„p„r„|„u„~„y„u „t„r„y„w„u„~„y„‘
 	if ((key & PAD_INPUT_RIGHT) != 0) 
 	{
-		
+		movingRight = true;
+		currentPosition = (currentPosition + 1) % (sizeof(line) / sizeof(line[0]));
 	}
 	else if ((key & PAD_INPUT_LEFT) != 0) 
 	{
-
+		movingRight = false;
+		currentPosition = (currentPosition - 1 + sizeof(line) / sizeof(line[0])) % (sizeof(line) / sizeof(line[0]));
 	}
 	else if ((key & PAD_INPUT_UP) != 0)
 	{
@@ -116,4 +122,11 @@ void PlayerMove()
 	{
 		
 	}
+	VectorI2 newPosition = line[currentPosition];
+	MoveControllerTo(newPosition.x, newPosition.y);
+}
+void MoveControllerTo(int x, int y)
+{
+	startPosX = x;
+	startPosY = y;
 }
