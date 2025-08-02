@@ -8,3 +8,4 @@ void PlayerRelease();
 void PlayerReset();
 
 bool PlayerIsDead();
+void PlayerMove();

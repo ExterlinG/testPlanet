@@ -93,7 +93,7 @@ void PlaySceneInit()
 		assert(galaxy >= 0);
 	}
 	if (lines < 0) {
-		lines = LoadGraph("data\\texture\\lines\\mylines1.png");
+		lines = LoadGraph("data\\texture\\lines\\mylines2.png");
 		assert(lines >= 0);
 	}
 	if (groundImage < 0) {
@@ -127,7 +127,7 @@ void PlaySceneUpdate()
 
 	walkCounter++;
 	lineWalkCounter++;
-	patternLine = (lineWalkCounter / 10) % 6;
+	patternLine = (lineWalkCounter / 10) % 10;
 	
 	//if (lineWalkCounter > 60)
 	//{
@@ -172,17 +172,7 @@ void PlaySceneDraw()
 
 	//line
 
-	const int LINE_SPRITE_WIDTH = 16;
-	const int LINE_SPRITE_HEIGHT = 80;
-		for (int i = 0; i < line_size; i++)
-		{
-			bool skipLine = (i == 5  || i == 11 || i == 18);
-
-		
-			if(!skipLine){
-			DrawRectRotaGraph2((line[i].x + PLANET_CENTER), line[i].y + PLANET_CENTER, patternLine * 16, 112, 80, LINE_SPRITE_WIDTH + PLANET_CENTER, LINE_SPRITE_HEIGHT + PLANET_CENTER, 0, 1, planetAngle[i], lines, true, false);
-			}
-		}
+	DrawLines(planetAngle);
 	//more center lines „t„€„„€„|„~„y„„„u„|„Ž„~„„u „|„y„~„y„y.
 		DrawExtraLines(extraAngles);
 		//DrawRectRotaGraph2((line[11].x + PLANET_CENTER), line[11].y + PLANET_CENTER, patternLine * 16, 112, 80, LINE_SPRITE_WIDTH + PLANET_CENTER, LINE_SPRITE_HEIGHT + PLANET_CENTER, 0, 1, planetAngle[11], lines, true, false);
@@ -250,12 +240,12 @@ void PlaySceneDraw()
 
 
 		if (DEBUG_FONT) {
-			DrawFormatString(20, 30, color, "EnemyStatus");
-			DrawFormatString(20, 50, color, "PosX %f, PosY %f ", enemyPosX, enemyPosY);
+			//DrawFormatString(20, 30, color, "EnemyStatus");
+			//DrawFormatString(20, 50, color, "PosX %f, PosY %f ", enemyPosX, enemyPosY);
 
 			//Angle‚ÍŠp“x‚Å‚Í‚È‚­Aƒ‰ƒWƒAƒ“i1.5790“xj‚Å•\Œ»‚³‚ê‚é
 			//75s–Ú‚Ì’†g
-			DrawFormatString(20, 70, color, "Angle %f ", planetAngle);
+			//DrawFormatString(20, 70, color, "Angle %f ", planetAngle);
 
 			//XÀ•W‚ÆYÀ•W‚Ö‚ÌˆÚ“®—Ê
 			//78s–ÚA79s–Ú‚Ì’†g
@@ -338,7 +328,7 @@ void CalculateExtraAngles(double extraAngles[]) {
 
 void DrawExtraLines(double extraAngles[]) {
 	const int LINE_SPRITE_WIDTH = 16;
-	const int LINE_SPRITE_HEIGHT = 80;
+	const int LINE_SPRITE_HEIGHT = 70;
 
 	// „P„p„‚„ „„|„p„~„u„„ „t„|„‘ „t„€„„€„|„~„y„„„u„|„Ž„~„„‡ „ƒ„€„u„t„y„~„u„~„y„z („„„p„{„y„u „w„u „{„p„{ „r CalculateExtraAngles)
 			//1. planet[3] „y planet[17].
@@ -367,6 +357,22 @@ void DrawExtraLines(double extraAngles[]) {
 		int midY = (planet[idx1].y + planet[idx2].y) / 2;
 
 		// „O„„„‚„y„ƒ„€„r„„r„p„u„} „p„~„y„}„y„‚„€„r„p„~„~„…„ „|„y„~„y„
-		DrawRectRotaGraph2(midX + PLANET_CENTER,midY + PLANET_CENTER,patternLine * 16,112,80,LINE_SPRITE_WIDTH,LINE_SPRITE_HEIGHT,0,1,extraAngles[i],lines,true,false);
+		DrawRectRotaGraph2(midX + PLANET_CENTER,midY + PLANET_CENTER,patternLine * 16,112,144,LINE_SPRITE_WIDTH,LINE_SPRITE_HEIGHT,0,1,extraAngles[i],lines,true,false);
+		DrawLineAA(line[idx1].x + PLANET_CENTER, line[idx1].y + PLANET_CENTER, line[idx2].x + PLANET_CENTER, line[idx2].y + PLANET_CENTER, GetColor(2, 194, 240), 2.0f);
+	}
+}
+void DrawLines(double planetAngle[])
+{
+	const int LINE_SPRITE_WIDTH = 16;
+	const int LINE_SPRITE_HEIGHT = 100;
+	for (int i = 0; i < line_size; i++)
+	{
+		bool skipLine = (i == 5 || i == 11 || i == 18);
+
+
+		if (!skipLine) {
+			DrawRectRotaGraph2((line[i].x + PLANET_CENTER), line[i].y + PLANET_CENTER, patternLine * 16, 112, 144, LINE_SPRITE_WIDTH + PLANET_CENTER, LINE_SPRITE_HEIGHT + PLANET_CENTER, 0, 1, planetAngle[i], lines, true, false);
+			DrawLineAA((line[i].x + PLANET_CENTER), line[i].y + PLANET_CENTER, (line[i + 1].x + PLANET_CENTER), (line[i + 1].y + PLANET_CENTER), GetColor(2, 194, 240), 2.0f);
+		}
 	}
 }
