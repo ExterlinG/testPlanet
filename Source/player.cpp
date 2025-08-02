@@ -1,7 +1,7 @@
 ﻿#include <DxLib.h>
 #include <assert.h>
 #include "config.h"
-#include "struct.h"
+//#include "struct.h"
 #include "player.h"
 #include <vector>
 #include <unordered_map>

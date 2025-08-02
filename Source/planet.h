@@ -1,12 +1,12 @@
 #pragma once
-
-enum PlanetType 
-{
-    NEUTRAL,
-    PLAYER,
-    ENEMY1,
-    ENEMY2
-};
+#include "globalGameData.h"
+//enum PlanetType 
+//{
+//    NEUTRAL,
+//    PLAYER,
+//    ENEMY1,
+//    ENEMY2
+//};
 
 struct Planet 
 {

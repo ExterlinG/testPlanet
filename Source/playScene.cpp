@@ -3,7 +3,7 @@
 #include <assert.h>
 #include "player.h"
 #include "app.h"
-#include "struct.h"
+//#include "struct.h"
 #include "math.h"
 #include <vector>
 #include "planet.h"

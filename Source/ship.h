@@ -2,7 +2,8 @@
 #include <vector>
 #include <unordered_map>
 #include "planet.h"
-#include "struct.h"
+//#include "struct.h"
+#include "globalGameData.h"
 
 
 struct Ship {

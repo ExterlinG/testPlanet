@@ -1,7 +1,7 @@
 #include "ship.h"
 #include "planet.h" // „D„|„‘ „t„€„ƒ„„„…„„p „{ planets
 #include "globalGameData.h"
-#include "struct.h"
+//#include "struct.h"
 #include "player.h"
 #include "math.h"
 #include "playScene.h"
@@ -26,25 +26,25 @@ void ShipInit()
 void ShipUpdate() {
     int currentTime = GetNowCount();
 
-    for (auto it = activeShips.begin(); it != activeShips.end(); ) {
-        it->progress = (currentTime - it->startTime) / (SHIP_SPEED * 1000.0f);
+    for (size_t i = 0; i < activeShips.size(); ) {
+        activeShips[i].progress = (currentTime - activeShips[i].startTime) / (SHIP_SPEED * 1000.0f);
 
-        if (it->progress >= 1.0f) {
-            Planet& fromPlanet = planets[it->fromPlanetIndex];
-            Planet& toPlanet = planets[it->toPlanetIndex];
+        if (activeShips[i].progress >= 1.0f) {
+            Planet& fromPlanet = planets[activeShips[i].fromPlanetIndex];
+            Planet& toPlanet = planets[activeShips[i].toPlanetIndex];
 
-            if (it->count > toPlanet.shipsCount) {
+            if (activeShips[i].count > toPlanet.shipsCount) {
                 toPlanet.type = fromPlanet.type;
-                toPlanet.shipsCount = it->count - toPlanet.shipsCount;
+                toPlanet.shipsCount = activeShips[i].count - toPlanet.shipsCount;
             }
             else {
-                toPlanet.shipsCount -= it->count;
+                toPlanet.shipsCount -= activeShips[i].count;
             }
 
-            it = activeShips.erase(it);
+            activeShips.erase(activeShips.begin() + i);
         }
         else {
-            ++it;
+            ++i;
         }
     }
 }
@@ -54,12 +54,13 @@ void SendShips(int fromPlanet, int toPlanet, int count) {
         toPlanet < 0 || toPlanet >= planets.size() ||
         count <= 0) return;
 
-    Ship newShip;
-    newShip.fromPlanetIndex = fromPlanet;
-    newShip.toPlanetIndex = toPlanet;
-    newShip.count = min(count, planets[fromPlanet].shipsCount);
-    newShip.progress = 0.0f;
-    newShip.startTime = GetNowCount();
+    Ship newShip = {
+        fromPlanet,
+        toPlanet,
+        min(count, planets[fromPlanet].shipsCount),
+        0.0f,
+        GetNowCount()
+    };
 
     activeShips.push_back(newShip);
     planets[fromPlanet].shipsCount -= newShip.count;
