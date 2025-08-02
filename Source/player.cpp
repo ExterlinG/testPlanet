@@ -235,7 +235,7 @@ void PlayerDraw()
 {
 	
 	DrawRectGraph((int)pos.x, (int)pos.y, cell.x * 80, cell.y * 80, 96, 112, humanShipImage, true, xFlip);
-	DrawCircle(startPosX + PLANET_CENTER, startPosY + PLANET_CENTER, 35, 0XFFFFFF, false, 5.0f);
+	DrawCircle(startPosX + PLANET_CENTER, startPosY + PLANET_CENTER, 42, 0XFFFFFF, false, 5.0f);
     DrawAvailableTransitions();
 }
 void PlayerRelease()

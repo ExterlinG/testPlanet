@@ -6,6 +6,7 @@
 #include "struct.h"
 #include "math.h"
 #include <vector>
+#include "planet.h"
 
 
 namespace {
@@ -14,6 +15,7 @@ namespace {
 		IN_PLAY,
 		AFTER_PLAY,
 	};
+	
 	PlayStatus status;
 
 	int galaxy = -1;		//game‚Ì”wŒi‰æ‘œ‚Ìƒnƒ“ƒhƒ‹
@@ -108,7 +110,7 @@ void PlaySceneInit()
 		playSound = LoadSoundMem("data\\sound\\playSound\\playSound.wav");
 		assert(playSound >= 0);
 	}
-	
+	PlanetInit();
 	PlayerInit();
 	walkCounter= 0;
 	patternLine = 0;
@@ -123,6 +125,7 @@ void PlaySceneInit()
 void PlaySceneUpdate()
 {
 	PlayerUpdate();
+	PlanetUpdate();
 	patternPlanet = (walkCounter / 6)% 77;
 
 	walkCounter++;
@@ -181,12 +184,14 @@ void PlaySceneDraw()
 		//DrawRectRotaGraph2(1008 + PLANET_CENTER, 128 + PLANET_CENTER, patternLine * 16, 112, 80, 16, -48, 0, 1, planetAngle, lines, true, false);//lines gray 1- gray 2
 
 		//planet position
-
+		PlayerDraw();
 		for (int i = 0; i < planet_size; i++)
 
 		{
 			DrawRectGraph(planet[i].x, planet[i].y, patternPlanet * 96, 0, 96, 96, groundImage, true, false);
 		}
+
+		PlanetDraw();
 		//DrawRectGraph(planet[18].x, planet[18].y, patternPlanet *96, 0, 96, 96, groundImage, true, false); //middle
 		//DrawRectGraph(planet[17].x, planet[17].y, patternPlanet * 96, 0, 96, 96, groundImage, true, false); //grey 15
 		//DrawRectGraph(planet[16].x, planet[16].y, patternPlanet * 96, 0, 96, 96, groundImage, true, false); //grey 14
@@ -236,7 +241,7 @@ void PlaySceneDraw()
 		//DrawRotaGraph2(848, 128, linePos.x*16, 112, 1, planetAngle, lines, true, false);
 		//DrawRectRotaGraph(enemyPosX, enemyPosY, linePos.x*16, 112,80,16, 1, planetAngle, lines, true, false);//lines rotated
 		//DrawRectRotaGraph2(848+48, 96+48, linePos.x * 16, 112, 80, 16, 0, 0, 1, planetAngle, lines, true, false);//lines rotated
-		PlayerDraw();
+
 
 
 		if (DEBUG_FONT) {
