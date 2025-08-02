@@ -1,14 +1,19 @@
-#include "playScene.h"
 #include <DxLib.h>
 #include <assert.h>
+#include "types.h"
+#include "playScene.h"
+#include "planet.h"
+#include "ship.h"
+
 #include "player.h"
 #include "app.h"
 //#include "struct.h"
 #include "math.h"
 #include <vector>
-#include "planet.h"
-#include "ship.h"
+
+
 #include "globalGameData.h"
+
 
 
 namespace {
@@ -53,7 +58,7 @@ namespace {
 	//					{1104, 768},{944, 704},{848, 560},
 	//					{848.5, 911},{704, 800},{624, 640},
 	//					{655, 464},{785, 352},{960, 336},{960,476} };
-	const int line_size = sizeof(line) / sizeof(line[0]);
+	//const int line_size = sizeof(line) / sizeof(line[0]);
 
 	//----------------------------------------------
 	const std::pair<int, int> extraConnections[] = {

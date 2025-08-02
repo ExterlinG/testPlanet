@@ -40,6 +40,7 @@
     <ClInclude Include="Source\ship.h" />
     <ClInclude Include="Source\struct.h" />
     <ClInclude Include="Source\titleScene.h" />
+    <ClInclude Include="Source\types.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{6DE8B531-01E2-4D25-97B5-5DC3AF9A13BB}</ProjectGuid>

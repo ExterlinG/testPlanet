@@ -1,11 +1,15 @@
-#include "ship.h"
+#include "types.h"
 #include "planet.h" // „D„|„‘ „t„€„ƒ„„„…„„p „{ planets
+#include "ship.h"
 #include "globalGameData.h"
 //#include "struct.h"
 #include "player.h"
 #include "math.h"
 #include "playScene.h"
 #include <algorithm>
+#include <unordered_map>
+#include <vector>
+
 // „C„|„€„q„p„|„„~„„u „„u„‚„u„}„u„~„~„„u „t„|„‘ „{„€„‚„p„q„|„u„z
 //std::vector<Ship> activeShips;
 //const float SHIP_SPEED = 5.0f;

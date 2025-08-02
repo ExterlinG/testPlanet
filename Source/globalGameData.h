@@ -2,6 +2,7 @@
 #include <vector>
 #include "planet.h"
 #include "ship.h"
+#include <unordered_map>
 //#include "struct.h"
 
 extern std::vector<Planet> planets;
@@ -16,19 +17,19 @@ extern const int UP;
 extern const int DOWN;
 //extern const int line_size = sizeof(line) / sizeof(line[0]);
 
-struct VectorI2 {
-    int x, y;
-};
-
-enum PlanetType {
-    NEUTRAL,
-    PLAYER,
-    ENEMY1,
-    ENEMY2
-};
-
-struct Vector2 {
-    float x, y;
-};
+//struct VectorI2 {
+//    int x, y;
+//};
+//
+//enum PlanetType {
+//    NEUTRAL,
+//    PLAYER,
+//    ENEMY1,
+//    ENEMY2
+//};
+//
+//struct Vector2 {
+//    float x, y;
+//};
 
 

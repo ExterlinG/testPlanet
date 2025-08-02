@@ -1,5 +1,6 @@
 #pragma once
-#include "globalGameData.h"
+#include "types.h"
+//#include "globalGameData.h"
 //enum PlanetType 
 //{
 //    NEUTRAL,

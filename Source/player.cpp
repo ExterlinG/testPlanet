@@ -1,13 +1,18 @@
 ﻿#include <DxLib.h>
 #include <assert.h>
 #include "config.h"
+#include "types.h"
 //#include "struct.h"
+#include "planet.h"
+#include "ship.h"
 #include "player.h"
 #include <vector>
 #include <unordered_map>
-#include "ship.h"
+
 #include <algorithm>
 #include "globalGameData.h"
+
+
 namespace
 {
 	static const float PLANET_CENTER = 48.0;

@@ -1,6 +1,9 @@
+#include "types.h"
 #include "globalGameData.h"
 #include "DxLib.h"
 #include <vector>
+#include <unordered_map>
+
 // „O„„‚„u„t„u„|„‘„u„} „s„|„€„q„p„|„„~„„u „„u„‚„u„}„u„~„~„„u
 std::vector<Planet> planets;
 std::vector<Ship> activeShips;

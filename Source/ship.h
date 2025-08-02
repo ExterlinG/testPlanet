@@ -2,6 +2,7 @@
 #include <vector>
 #include <unordered_map>
 #include "planet.h"
+#include "types.h"
 //#include "struct.h"
 #include "globalGameData.h"
 

@@ -1,4 +1,5 @@
 #include <DxLib.h>
+#include "types.h"
 #include <assert.h>
 #include "config.h"
 //#include "struct.h"
@@ -7,6 +8,7 @@
 #include <unordered_map>
 #include "planet.h"
 #include "globalGameData.h"
+
 namespace
 {
     // „C„|„€„q„p„|„„~„„u „„u„‚„u„}„u„~„~„„u
