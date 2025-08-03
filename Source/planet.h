@@ -12,12 +12,13 @@
 //extern std::vector<std::shared_ptr<Planet>> planets;/
 struct Planet 
 {
-    int positionIndex;  // „I„~„t„u„{„ƒ „r „}„p„ƒ„ƒ„y„r„u line[]
+	int positionIndex;  // „I„~„t„u„{„ƒ „r „}„p„ƒ„ƒ„y„r„u line[]
     PlanetType type;
     int faction = 0; // „D„€„q„p„r„|„u„~„€ „„€„|„u faction „t„|„‘ „ƒ„€„r„}„u„ƒ„„„y„}„€„ƒ„„„y „ƒ enemy.cpp
     int shipsCount = 0;
     int lastSpawnTime = 0;
     Vector2 position;
+	int id = -1; // „T„~„y„{„p„|„„~„„z „y„t„u„~„„„y„†„y„{„p„„„€„‚ „„|„p„~„u„„„, „u„ƒ„|„y „~„…„w„u„~
 };
 
 void PlanetInit();

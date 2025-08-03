@@ -17,6 +17,7 @@ struct Ship
     int faction;
     Planet* currentPlanet = nullptr;
     Planet* targetPlanet = nullptr;
+    bool isMoving = false; // „D„€„q„p„r„|„u„~„€ „t„|„‘ „ƒ„€„r„}„u„ƒ„„„y„}„€„ƒ„„„y „ƒ enemy.cpp
 };
 //struct Planet 
 //{
