@@ -1,6 +1,8 @@
 #include <DxLib.h>
 #include <assert.h>
 #include "types.h"
+#include "globalGameData.h"
+
 #include "playScene.h"
 #include "planet.h"
 #include "ship.h"
@@ -10,12 +12,16 @@
 //#include "struct.h"
 #include "math.h"
 #include <vector>
+#include <utility>
+#include "enemy.h"
+
+#include <memory>
 
 
-#include "globalGameData.h"
 
-
-
+extern std::vector<std::shared_ptr<Planet>> planets;// ÑB playScene.cpp
+////std::vector<std::shared_ptr<Planet>> planets;
+//extern std::vector<Planet> planets;
 namespace {
 	enum class PlayStatus {
 		BEFORE_PLAY,
@@ -89,7 +95,7 @@ namespace {
 	double enemyPosX = 848.0f;	//ÉGÉlÉ~Å[ÇÃç¿ïW
 	double enemyPosY = 96.0f;
 
-	
+	std::vector<std::shared_ptr<Ship>> ships;
 
 	//debug
 	int color;
@@ -118,9 +124,22 @@ void PlaySceneInit()
 		playSound = LoadSoundMem("data\\sound\\playSound\\playSound.wav");
 		assert(playSound >= 0);
 	}
+	//planets.clear();
+	//for (int i = 0; i < planet_size; ++i) {
+	//	auto p = std::make_shared<Planet>();
+	//	p->positionIndex = i;
+	//	p->type = NEUTRAL; // ÑyÑ|Ñy ÑtÑÇÑÖÑsÑÄÑz ÑÑÑyÑÅ, ÑuÑÉÑ|Ñy Ñ~ÑÖÑwÑ~ÑÄ
+	//	p->faction = 0;
+	//	p->shipsCount = 0;
+	//	p->lastSpawnTime = 0;
+	//	p->position.x = planet[i].x;
+	//	p->position.y = planet[i].y;
+	//	planets.push_back(p);
+	//}
 	PlanetInit();
 	PlayerInit();
 	ShipInit();
+	ships.clear();
 	walkCounter= 0;
 	patternLine = 0;
 	patternPlanet = 0;
@@ -136,7 +155,8 @@ void PlaySceneUpdate()
 	PlayerUpdate();
 	ShipUpdate();
 	PlanetUpdate();
-	
+	UpdateEnemyLogic(1, planets, ships); // ÑDÑ|Ñë ENEMY 1
+	UpdateEnemyLogic(2, planets, ships); // ÑDÑ|Ñë ENEMY 2
 
 	patternPlanet = (walkCounter / 6)% 77;
 

@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\app.cpp" />
+    <ClCompile Include="Source\enemy.cpp" />
     <ClCompile Include="Source\gameOverScene.cpp" />
     <ClCompile Include="Source\globalGameData.cpp" />
     <ClCompile Include="Source\main.cpp" />
@@ -32,6 +33,7 @@
   <ItemGroup>
     <ClInclude Include="Source\app.h" />
     <ClInclude Include="Source\config.h" />
+    <ClInclude Include="Source\enemy.h" />
     <ClInclude Include="Source\gameOverScene.h" />
     <ClInclude Include="Source\globalGameData.h" />
     <ClInclude Include="Source\planet.h" />

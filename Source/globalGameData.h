@@ -8,6 +8,7 @@ struct Ship;
 constexpr size_t LINE_SIZE = 19;
 extern std::vector<Planet> planets;
 extern std::vector<Ship> activeShips;
+//extern std::vector<std::shared_ptr<Planet>> planets;
 extern VectorI2 line[];
 extern const std::unordered_map<int, std::vector<std::pair<int, int>>> transitionMap;
 extern const float SHIP_SPEED;

@@ -8,6 +8,7 @@
 // „O„„‚„u„t„u„|„‘„u„} „s„|„€„q„p„|„„~„„u „„u„‚„u„}„u„~„~„„u
 std::vector<Planet> planets;
 std::vector<Ship> activeShips;
+//std::vector<std::shared_ptr<Planet>> planets;
 extern const float SHIP_SPEED = 5.0f;
 //extern int shipGraphicHandle;
 int shipGraphic = -1;

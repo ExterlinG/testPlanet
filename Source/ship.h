@@ -5,6 +5,7 @@
 #include <vector>
 #include <unordered_map>
 //#include "globalGameData.h"
+#include <memory>
 
 // „R„„„‚„…„{„„„…„‚„p „{„€„‚„p„q„|„‘ („x„p„r„y„ƒ„y„„ „„„€„|„„{„€ „€„„ „q„p„x„€„r„„‡ „„„y„„€„r)
 struct Ship 
@@ -13,6 +14,9 @@ struct Ship
     int toPlanetIdx;    // „I„~„t„u„{„ƒ „„|„p„~„u„„„-„ˆ„u„|„y „r „r„u„{„„„€„‚„u planets
     int count;          // „K„€„|„y„‰„u„ƒ„„„r„€ „{„€„‚„p„q„|„u„z „r „s„‚„…„„„u
     float progress;     // „P„‚„€„s„‚„u„ƒ„ƒ „„u„‚„u„}„u„‹„u„~„y„‘ (0.0 - 1.0)
+    int faction;
+    std::shared_ptr<Planet> currentPlanet; // „D„€„q„p„r„|„u„~„€ „t„|„‘ „ƒ„€„r„}„u„ƒ„„„y„}„€„ƒ„„„y „ƒ enemy.cpp
+    std::shared_ptr<Planet> targetPlanet;
 };
 //struct Planet 
 //{
