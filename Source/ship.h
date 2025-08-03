@@ -15,8 +15,8 @@ struct Ship
     int count;          // „K„€„|„y„‰„u„ƒ„„„r„€ „{„€„‚„p„q„|„u„z „r „s„‚„…„„„u
     float progress;     // „P„‚„€„s„‚„u„ƒ„ƒ „„u„‚„u„}„u„‹„u„~„y„‘ (0.0 - 1.0)
     int faction;
-    std::shared_ptr<Planet> currentPlanet; // „D„€„q„p„r„|„u„~„€ „t„|„‘ „ƒ„€„r„}„u„ƒ„„„y„}„€„ƒ„„„y „ƒ enemy.cpp
-    std::shared_ptr<Planet> targetPlanet;
+    Planet* currentPlanet = nullptr;
+    Planet* targetPlanet = nullptr;
 };
 //struct Planet 
 //{

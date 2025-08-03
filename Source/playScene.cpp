@@ -155,9 +155,12 @@ void PlaySceneUpdate()
 	PlayerUpdate();
 	ShipUpdate();
 	PlanetUpdate();
-	UpdateEnemyLogic(1, planets, ships); // planets - ÑèÑÑÑÄ std::vector<Planet>
-	UpdateEnemyLogic(2, planets, ships);
-
+	// ÑRÑÑÑpÑ|ÑÄ (ÑuÑÉÑ|Ñy ships - vector<shared_ptr<Ship>>):
+	std::vector<Ship> rawShips;
+	for (auto& shipPtr : ships) {
+		rawShips.push_back(*shipPtr);
+	}
+	UpdateEnemyLogic(1, planets, rawShips);
 	patternPlanet = (walkCounter / 6)% 77;
 
 	walkCounter++;

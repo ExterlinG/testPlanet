@@ -17,7 +17,6 @@ Planet* FindNearestEnemyPlanet(Planet* fromPlanet, int faction, std::vector<Plan
     float minDistance = std::numeric_limits<float>::max();
 
     for (auto& planet : planets) {
-        // „P„‚„€„„…„ƒ„{„p„u„} „„„u„{„…„‹„…„ „„|„p„~„u„„„… „y „„|„p„~„u„„„ „„„€„z „w„u „†„‚„p„{„ˆ„y„y
         if (&planet == fromPlanet || planet.faction == faction) continue;
 
         float dx = planet.position.x - fromPlanet->position.x;
@@ -29,28 +28,27 @@ Planet* FindNearestEnemyPlanet(Planet* fromPlanet, int faction, std::vector<Plan
             nearestPlanet = &planet;
         }
     }
-
     return nearestPlanet;
 }
 
-void UpdateEnemyLogic(int faction, std::vector<Planet>& planets, std::vector<std::shared_ptr<Ship>>& ships) {
+void UpdateEnemyLogic(int faction, std::vector<Planet>& planets, std::vector<Ship>& ships) {
     for (auto& planet : planets) {
         if (planet.faction == faction) {
-            // „R„€„q„y„‚„p„u„} „r„ƒ„u „{„€„‚„p„q„|„y „„„„€„z „†„‚„p„{„ˆ„y„y „~„p „„|„p„~„u„„„u
-            std::vector<std::shared_ptr<Ship>> planetShips;
-            for (auto& ship : ships) {
-                if (ship->faction == faction && ship->currentPlanet.get() == &planet) {
-                    planetShips.push_back(ship);
+            // „R„€„q„y„‚„p„u„} „y„~„t„u„{„ƒ„ „{„€„‚„p„q„|„u„z „~„p „„„„€„z „„|„p„~„u„„„u
+            std::vector<size_t> planetShipIndices;
+            for (size_t i = 0; i < ships.size(); ++i) {
+                if (ships[i].faction == faction && ships[i].currentPlanet == &planet) {
+                    planetShipIndices.push_back(i);
                 }
             }
 
             // „E„ƒ„|„y „q„€„|„„Š„u 10 „{„€„‚„p„q„|„u„z - „€„„„„‚„p„r„|„‘„u„} „B„R„E
-            if (planetShips.size() > 10) {
+            if (planetShipIndices.size() > 10) {
                 Planet* targetPlanet = FindNearestEnemyPlanet(&planet, faction, planets);
                 if (targetPlanet) {
-                    for (auto& ship : planetShips) {
-                        ship->targetPlanet = targetPlanet;
-                        ship->currentPlanet = nullptr;
+                    for (auto shipIndex : planetShipIndices) {
+                        ships[shipIndex].targetPlanet = targetPlanet;
+                        ships[shipIndex].currentPlanet = nullptr;
                     }
                 }
             }
