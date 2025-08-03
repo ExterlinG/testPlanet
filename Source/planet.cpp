@@ -34,9 +34,9 @@ void PlanetInit()
     planets.clear();
 
     // „I„~„y„ˆ„y„p„|„y„x„p„ˆ„y„‘ „„|„p„~„u„„ („„‚„y„}„u„‚)
-    planets.push_back({ 0, PLAYER, 10 ,10 });   // „R„„„p„‚„„„€„r„p„‘ „„|„p„~„u„„„p „y„s„‚„€„{„p
-    planets.push_back({ 6, ENEMY1, 10,10 });   // „P„|„p„~„u„„„p „„‚„€„„„y„r„~„y„{„p 1
-    planets.push_back({ 12, ENEMY2, 10 ,10});   // „P„|„p„~„u„„„p „„‚„€„„„y„r„~„y„{„p 2
+    planets.push_back({ 0, PLAYER, 10 });   // „R„„„p„‚„„„€„r„p„‘ „„|„p„~„u„„„p „y„s„‚„€„{„p
+    planets.push_back({ 6, ENEMY1, 10 });   // „P„|„p„~„u„„„p „„‚„€„„„y„r„~„y„{„p 1
+    planets.push_back({ 12, ENEMY2, 10});   // „P„|„p„~„u„„„p „„‚„€„„„y„r„~„y„{„p 2
     // „O„ƒ„„„p„|„„~„„u „„|„p„~„u„„„ NEUTRAL
     for (int i = 0; i < 19; i++) 
     {

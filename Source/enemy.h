@@ -6,7 +6,6 @@
 #include "ship.h"
 #include <vector>
 
-void UpdateEnemyLogic(int faction, std::vector<Planet>& planets, std::vector<Ship>& ships);
-Planet* FindNearestEnemyPlanet(Planet* fromPlanet, int faction, std::vector<Planet>& planets);
+void UpdateEnemyShips(std::vector<Planet>& planets, std::vector<Ship>& ships);
 
 #endif // ENEMY_H

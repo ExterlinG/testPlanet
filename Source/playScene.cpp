@@ -22,6 +22,7 @@
 //extern std::vector<std::shared_ptr<Planet>> planets;// ÑB playScene.cpp
 ////std::vector<std::shared_ptr<Planet>> planets;
 //extern std::vector<Planet> planets;
+//extern std::vector<Ship> ships;
 namespace {
 	enum class PlayStatus {
 		BEFORE_PLAY,
@@ -139,7 +140,7 @@ void PlaySceneInit()
 	PlanetInit();
 	PlayerInit();
 	ShipInit();
-	ships.clear();
+	//ships.clear();
 	walkCounter= 0;
 	patternLine = 0;
 	patternPlanet = 0;
@@ -157,10 +158,11 @@ void PlaySceneUpdate()
 	PlanetUpdate();
 	// ÑRÑÑÑpÑ|ÑÄ (ÑuÑÉÑ|Ñy ships - vector<shared_ptr<Ship>>):
 	std::vector<Ship> rawShips;
-	for (auto& shipPtr : ships) {
-		rawShips.push_back(*shipPtr);
+	for (const auto& shipPtr : ships) {
+		if (shipPtr) rawShips.push_back(*shipPtr);
 	}
-	UpdateEnemyLogic(1, planets, rawShips);
+	UpdateEnemyShips(planets, rawShips);
+	//UpdateEnemyLogic(1, planets, rawShips);
 	patternPlanet = (walkCounter / 6)% 77;
 
 	walkCounter++;
@@ -196,7 +198,7 @@ void PlaySceneUpdate()
 	//AngleÇ∆ë¨ìxÇë´ÇµÇƒç¿ïWÇïœÇ¶ÇÈ
 	//enemyPosX = cos(planetAngle);
 	//enemyPosY = sin(planetAngle);
-
+	
 }
 
 void PlaySceneDraw()

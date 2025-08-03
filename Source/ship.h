@@ -14,7 +14,7 @@ struct Ship
     int toPlanetIdx;    // „I„~„t„u„{„ƒ „„|„p„~„u„„„-„ˆ„u„|„y „r „r„u„{„„„€„‚„u planets
     int count;          // „K„€„|„y„‰„u„ƒ„„„r„€ „{„€„‚„p„q„|„u„z „r „s„‚„…„„„u
     float progress;     // „P„‚„€„s„‚„u„ƒ„ƒ „„u„‚„u„}„u„‹„u„~„y„‘ (0.0 - 1.0)
-    int faction;
+    //int faction;
     Planet* currentPlanet = nullptr;
     Planet* targetPlanet = nullptr;
     bool isMoving = false; // „D„€„q„p„r„|„u„~„€ „t„|„‘ „ƒ„€„r„}„u„ƒ„„„y„}„€„ƒ„„„y „ƒ enemy.cpp

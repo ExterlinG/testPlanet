@@ -13,62 +13,51 @@
 #include "math.h"
 
 
-Planet* FindNearestEnemyPlanet(Planet* fromPlanet, int faction, std::vector<Planet>& planets) {
-    Planet* nearestPlanet = nullptr;
-    float minDistance = std::numeric_limits<float>::max();
+// „I„ƒ„„‚„p„r„|„u„~„y„u: „…„q„y„‚„p„u„} const „… „„p„‚„p„}„u„„„‚„p planets, „‰„„„€„q„ „}„€„w„~„€ „q„„|„€ „q„‚„p„„„ „p„t„‚„u„ƒ„p „„|„u„}„u„~„„„€„r
+Planet* FindNearestTargetPlanet(Planet* source, std::vector<Planet>& planets) {
+    Planet* nearest = nullptr;
+    float minDist = std::numeric_limits<float>::max();
 
     for (auto& planet : planets) {
-        // „P„‚„€„„…„ƒ„{„p„u„}: „„„u„{„…„‹„…„ „„|„p„~„u„„„…, „ƒ„r„€„y „„|„p„~„u„„„ „y „~„u„z„„„‚„p„|„„~„„u („u„ƒ„|„y „~„…„w„~„€)
-        if (&planet == fromPlanet ||
-            static_cast<int>(planet.faction) == faction ||
-            planet.faction == NEUTRAL) continue;
+        // „P„‚„€„„…„ƒ„{„p„u„} „y„ƒ„‡„€„t„~„…„ „„|„p„~„u„„„… „y „„|„p„~„u„„„ „„„€„z „w„u „†„‚„p„{„ˆ„y„y
+        if (&planet == source || planet.type == source->type)
+            continue;
 
-        float dx = planet.position.x - fromPlanet->position.x;
-        float dy = planet.position.y - fromPlanet->position.y;
-        float distance = std::sqrt(dx * dx + dy * dy);
+        float dx = planet.position.x - source->position.x;
+        float dy = planet.position.y - source->position.y;
+        float dist = std::sqrt(dx * dx + dy * dy);
 
-        if (distance < minDistance) {
-            minDistance = distance;
-            nearestPlanet = &planet;
+        if (dist < minDist) {
+            minDist = dist;
+            nearest = &planet;
         }
     }
-
-    // „D„€„q„p„r„y„} „€„„„|„p„t„€„‰„~„„z „r„„r„€„t
-    if (!nearestPlanet) {
-        std::cout << "No target found for faction " << faction << std::endl;
-    }
-
-    return nearestPlanet;
+    return nearest;
 }
 
-void UpdateEnemyLogic(int faction, std::vector<Planet>& planets, std::vector<Ship>& ships) {
+void UpdateEnemyShips(std::vector<Planet>& planets, std::vector<Ship>& ships) {
     for (auto& planet : planets) {
-        if (static_cast<int>(planet.faction) == faction) {
-            int shipCount = 0;
-            std::vector<size_t> shipsOnPlanet;
+        // „Q„p„q„€„„„p„u„} „„„€„|„„{„€ „ƒ „r„‚„p„w„u„ƒ„{„y„}„y „„|„p„~„u„„„p„}„y
+        if (planet.type != ENEMY1 && planet.type != ENEMY2)
+            continue;
 
-            // „R„‰„y„„„p„u„} „{„€„‚„p„q„|„y
-            for (size_t i = 0; i < ships.size(); ++i) {
-                if (ships[i].faction == faction &&
-                    ships[i].currentPlanet == &planet) {
-                    shipCount++;
-                    shipsOnPlanet.push_back(i);
-                }
+        // „R„‰„y„„„p„u„} „{„€„‚„p„q„|„y „~„p „„|„p„~„u„„„u
+        int shipCount = 0;
+        for (auto& ship : ships) {
+            if (ship.currentPlanet == &planet) {
+                shipCount++;
             }
+        }
 
-            // „E„ƒ„|„y >10 - „€„„„„‚„p„r„|„‘„u„} „B„R„E
-            if (shipCount > 10) {
-                Planet* target = FindNearestEnemyPlanet(&planet, faction, planets);
-                if (target) {
-                    for (auto shipIndex : shipsOnPlanet) {
-                        ships[shipIndex].targetPlanet = target;
-                        ships[shipIndex].currentPlanet = nullptr;
-                        // „D„€„q„p„r„y„} „„‚„y„x„~„p„{ „t„r„y„w„u„~„y„‘
-                        ships[shipIndex].isMoving = true;
+        // „E„ƒ„|„y „q„€„|„„Š„u 10 - „€„„„„‚„p„r„|„‘„u„} „r„ƒ„u
+        if (shipCount > 10) {
+            Planet* target = FindNearestTargetPlanet(&planet, planets);
+            if (target) {
+                for (auto& ship : ships) {
+                    if (ship.currentPlanet == &planet) {
+                        ship.targetPlanet = target;
+                        ship.currentPlanet = nullptr;
                     }
-                    std::cout << "Sent " << shipsOnPlanet.size()
-                        << " ships from planet " << planet.id
-                        << " to planet " << target->id << std::endl;
                 }
             }
         }
