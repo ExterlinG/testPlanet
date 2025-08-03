@@ -13,52 +13,48 @@
 #include "math.h"
 
 
-// „I„ƒ„„‚„p„r„|„u„~„y„u: „…„q„y„‚„p„u„} const „… „„p„‚„p„}„u„„„‚„p planets, „‰„„„€„q„ „}„€„w„~„€ „q„„|„€ „q„‚„p„„„ „p„t„‚„u„ƒ„p „„|„u„}„u„~„„„€„r
-Planet* FindNearestTargetPlanet(Planet* source, std::vector<Planet>& planets) {
-    Planet* nearest = nullptr;
-    float minDist = std::numeric_limits<float>::max();
+void UpdateEnemyAI(std::vector<Planet>& planets, std::vector<Ship>& ships) {
+    for (size_t i = 0; i < planets.size(); i++) {
+        auto& planet = planets[i];
 
-    for (auto& planet : planets) {
-        // „P„‚„€„„…„ƒ„{„p„u„} „y„ƒ„‡„€„t„~„…„ „„|„p„~„u„„„… „y „„|„p„~„u„„„ „„„€„z „w„u „†„‚„p„{„ˆ„y„y
-        if (&planet == source || planet.type == source->type)
-            continue;
+        // „S„€„|„„{„€ „t„|„‘ „r„‚„p„w„u„ƒ„{„y„‡ „„|„p„~„u„„ (ENEMY1 „y„|„y ENEMY2)
+        if (planet.type != ENEMY1 && planet.type != ENEMY2) continue;
 
-        float dx = planet.position.x - source->position.x;
-        float dy = planet.position.y - source->position.y;
-        float dist = std::sqrt(dx * dx + dy * dy);
-
-        if (dist < minDist) {
-            minDist = dist;
-            nearest = &planet;
-        }
-    }
-    return nearest;
-}
-
-void UpdateEnemyShips(std::vector<Planet>& planets, std::vector<Ship>& ships) {
-    for (auto& planet : planets) {
-        // „Q„p„q„€„„„p„u„} „„„€„|„„{„€ „ƒ „r„‚„p„w„u„ƒ„{„y„}„y „„|„p„~„u„„„p„}„y
-        if (planet.type != ENEMY1 && planet.type != ENEMY2)
-            continue;
-
-        // „R„‰„y„„„p„u„} „{„€„‚„p„q„|„y „~„p „„|„p„~„u„„„u
-        int shipCount = 0;
-        for (auto& ship : ships) {
-            if (ship.currentPlanet == &planet) {
-                shipCount++;
+        // „E„ƒ„|„y „{„€„‚„p„q„|„u„z „q„€„|„„Š„u 10
+        if (planet.shipsCount > 10) {
+            // „P„€„|„…„‰„p„u„} „t„€„ƒ„„„…„„~„„u „„u„‚„u„‡„€„t„ „t„|„‘ „„„u„{„…„‹„u„z „„|„p„~„u„„„
+            auto it = transitionMap.find(planet.id);
+            if (it == transitionMap.end()) {
+                std::cout << "No transitions for planet " << planet.id << std::endl;
+                continue;
             }
-        }
 
-        // „E„ƒ„|„y „q„€„|„„Š„u 10 - „€„„„„‚„p„r„|„‘„u„} „r„ƒ„u
-        if (shipCount > 10) {
-            Planet* target = FindNearestTargetPlanet(&planet, planets);
-            if (target) {
-                for (auto& ship : ships) {
-                    if (ship.currentPlanet == &planet) {
-                        ship.targetPlanet = target;
-                        ship.currentPlanet = nullptr;
+            // „I„‹„u„} „„u„‚„r„…„ „t„€„ƒ„„„…„„~„…„ „‰„…„w„…„ „„|„p„~„u„„„…
+            int targetIdx = -1;
+            for (auto& transition : it->second) {
+                int targetPlanetId = transition.second; // „A„u„‚„u„} „r„„„€„‚„€„z „„|„u„}„u„~„„ „„p„‚„ (ID „ˆ„u„|„u„r„€„z „„|„p„~„u„„„)
+
+                // „N„p„‡„€„t„y„} „y„~„t„u„{„ƒ „„|„p„~„u„„„ „„€ ID
+                for (size_t j = 0; j < planets.size(); j++) {
+                    if (planets[j].id == targetPlanetId && planets[j].type != planet.type) {
+                        targetIdx = j;
+                        break;
                     }
                 }
+
+                if (targetIdx != -1) break;
+            }
+
+            // „E„ƒ„|„y „~„p„Š„|„y „t„€„„…„ƒ„„„y„}„…„ „ˆ„u„|„
+            if (targetIdx != -1) {
+                std::cout << "ENEMY AI: Sending ships from planet " << planet.id
+                    << " to " << planets[targetIdx].id << std::endl;
+
+                // „I„ƒ„„€„|„„x„…„u„} „ƒ„…„‹„u„ƒ„„„r„…„„‹„…„ „†„…„~„{„ˆ„y„ „€„„„„‚„p„r„{„y
+                SendShips(i, targetIdx);
+            }
+            else {
+                std::cout << "No valid targets for planet " << planet.id << std::endl;
             }
         }
     }

@@ -18,7 +18,7 @@ struct Planet
     int shipsCount = 0;
     int lastSpawnTime = 0;
     Vector2 position;
-	//int id = -1; // „T„~„y„{„p„|„„~„„z „y„t„u„~„„„y„†„y„{„p„„„€„‚ „„|„p„~„u„„„, „u„ƒ„|„y „~„…„w„u„~
+	int id = -1; // „T„~„y„{„p„|„„~„„z „y„t„u„~„„„y„†„y„{„p„„„€„‚ „„|„p„~„u„„„, „u„ƒ„|„y „~„…„w„u„~
 };
 
 void PlanetInit();

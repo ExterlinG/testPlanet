@@ -161,7 +161,7 @@ void PlaySceneUpdate()
 	for (const auto& shipPtr : ships) {
 		if (shipPtr) rawShips.push_back(*shipPtr);
 	}
-	UpdateEnemyShips(planets, rawShips);
+	UpdateEnemyAI(planets, rawShips);
 	//UpdateEnemyLogic(1, planets, rawShips);
 	patternPlanet = (walkCounter / 6)% 77;
 
