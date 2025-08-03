@@ -12,6 +12,7 @@
 
 
 // „C„|„€„q„p„|„„~„„u „„u„‚„u„}„u„~„~„„u („€„„‚„u„t„u„|„u„~„ „r globalData.cpp)
+static const float PLANET_CENTER = 48.0;
 extern std::vector<Planet> planets;
 extern std::vector<Ship> activeShips;
 extern VectorI2 line[];  // „M„p„ƒ„ƒ„y„r „{„€„€„‚„t„y„~„p„„ „„„€„‰„u„{
@@ -30,8 +31,8 @@ int patternShip;
 int walkCounter; // „R„‰„u„„„‰„y„{ „t„|„‘ „p„~„y„}„p„ˆ„y„y „{„€„‚„p„q„|„u„z
 void ShipInit() 
 {
-    shipGraphicEngine = LoadGraph("data\\texture\\humanShip\\engine.png");
-    shipGraphic = LoadGraph("data\\texture\\humanShip\\battlecruiser.png");
+    //shipGraphicEngine = LoadGraph("data\\texture\\humanShip\\engine.png");
+    shipGraphic = LoadGraph("data\\texture\\humanShip\\engine2.png");
     activeShips.clear(); // „O„‰„y„‹„p„u„} „}„p„ƒ„ƒ„y„r „{„€„‚„p„q„|„u„z
     walkCounter = 0;
 }
@@ -49,7 +50,11 @@ void ShipUpdate() {
             Planet& toPlanet = planets[activeShips[i].toPlanetIdx];
 
             // „L„€„s„y„{„p „q„€„‘:
-            if (activeShips[i].count > toPlanet.shipsCount) {
+            if (fromPlanet.type == PLAYER && toPlanet.type == PLAYER) 
+            {
+                toPlanet.shipsCount = min(toPlanet.shipsCount + activeShips[i].count, 100);
+			}
+            else if (activeShips[i].count > toPlanet.shipsCount) {
                 // „H„p„‡„r„p„„ „„|„p„~„u„„„
                 toPlanet.type = fromPlanet.type; // „M„u„~„‘„u„} „r„|„p„t„u„|„„ˆ„p
                 toPlanet.shipsCount = activeShips[i].count - toPlanet.shipsCount;
@@ -87,21 +92,29 @@ void SendShips(int fromPlanetIdx, int toPlanetIdx) {
 
 void ShipDraw() {
     for (const auto& ship : activeShips) {
-        // „P„€„|„…„‰„p„u„} „{„€„€„‚„t„y„~„p„„„ „„|„p„~„u„„
         const VectorI2& fromPos = line[planets[ship.fromPlanetIdx].positionIndex];
         const VectorI2& toPos = line[planets[ship.toPlanetIdx].positionIndex];
 
-        // „P„‚„€„}„u„w„…„„„€„‰„~„p„‘ „„€„x„y„ˆ„y„‘
-        float x = fromPos.x + (toPos.x - fromPos.x) * ship.progress;
-        float y = fromPos.y + (toPos.y - fromPos.y) * ship.progress;
+        // „P„€„x„y„ˆ„y„‘ „ƒ „y„~„„„u„‚„„€„|„‘„ˆ„y„u„z
+        float x = fromPos.x + (toPos.x  - fromPos.x )  * ship.progress;
+        float y = fromPos.y+ (toPos.y  - fromPos.y)  * ship.progress;
 
-        // „T„s„€„| „„€„r„€„‚„€„„„p „„€ „~„p„„‚„p„r„|„u„~„y„ „t„r„y„w„u„~„y„‘
-        float angle = atan2(toPos.y - fromPos.y, toPos.x - fromPos.x);
+        // „P„‚„p„r„y„|„„~„„z „‚„p„ƒ„‰„u„„ „…„s„|„p („~„€„ƒ „{ „ˆ„u„|„y)
+        float angle = atan2(toPos.y - y, toPos.x - x) + DX_PI / 2;; // „T„s„€„| „€„„ „„„u„{„…„‹„u„z „„€„x„y„ˆ„y„y „{ „ˆ„u„|„y
 
-        // „Q„y„ƒ„…„u„} „{„€„‚„p„q„|„
-        DrawRotaGraphF(x, y, 1.0f, angle, shipGraphic, TRUE);
-        DrawRectRotaGraph2(x-78, y-50, patternShip*128, 0, 128, 1536, 0, 0,1.0f, angle, shipGraphicEngine, TRUE, FALSE);
-        // „O„„„€„q„‚„p„w„p„u„} „{„€„|„y„‰„u„ƒ„„„r„€ „{„€„‚„p„q„|„u„z
-        DrawFormatStringF(x + 15, y - 10, GetColor(255, 255, 255), "%d", ship.count);
+        // 1. „Q„y„ƒ„…„u„} „€„ƒ„~„€„r„~„€„u „y„x„€„q„‚„p„w„u„~„y„u „{„€„‚„p„q„|„‘ („„€„r„u„‚„~„…„„„€„u „~„p angle)
+        DrawRectRotaGraph2(x+ PLANET_CENTER, y+ PLANET_CENTER, patternShip * 128, 0, 128, 1536, 64, 64, 1.0f, angle, shipGraphic, true, false);
+
+        //// 2. „Q„y„ƒ„…„u„} „t„r„y„s„p„„„u„|„y „ƒ „…„‰„u„„„€„} „„€„r„€„‚„€„„„p
+        //float engineOffsetX = -25.0f * cosf(angle); // „R„}„u„‹„u„~„y„u „~„p„x„p„t „„€ „€„ƒ„y „{„€„‚„p„q„|„‘
+        //float engineOffsetY = -25.0f * sinf(angle);
+
+        
+          
+
+        // 3. „O„„„€„q„‚„p„w„p„u„} „{„€„|„y„‰„u„ƒ„„„r„€ „{„€„‚„p„q„|„u„z
+        DrawFormatStringF(x + 25 * cosf(angle),
+            y + 25 * sinf(angle),
+            GetColor(255, 255, 255), "%d", ship.count);
     }
 }
