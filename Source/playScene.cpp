@@ -19,7 +19,7 @@
 
 
 
-extern std::vector<std::shared_ptr<Planet>> planets;// ÑB playScene.cpp
+//extern std::vector<std::shared_ptr<Planet>> planets;// ÑB playScene.cpp
 ////std::vector<std::shared_ptr<Planet>> planets;
 //extern std::vector<Planet> planets;
 namespace {
@@ -155,8 +155,8 @@ void PlaySceneUpdate()
 	PlayerUpdate();
 	ShipUpdate();
 	PlanetUpdate();
-	UpdateEnemyLogic(1, planets, ships); // ÑDÑ|Ñë ENEMY 1
-	UpdateEnemyLogic(2, planets, ships); // ÑDÑ|Ñë ENEMY 2
+	UpdateEnemyLogic(1, planets, ships); // planets - ÑèÑÑÑÄ std::vector<Planet>
+	UpdateEnemyLogic(2, planets, ships);
 
 	patternPlanet = (walkCounter / 6)% 77;
 
