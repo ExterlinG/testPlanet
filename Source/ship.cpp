@@ -16,6 +16,7 @@ extern std::vector<Planet> planets;
 extern std::vector<Ship> activeShips;
 extern VectorI2 line[];  // „M„p„ƒ„ƒ„y„r „{„€„€„‚„t„y„~„p„„ „„„€„‰„u„{
 extern int shipGraphic;        // „C„‚„p„†„y„{„p „{„€„‚„p„q„|„‘
+extern int shipGraphicEngine;        // „C„‚„p„†„y„{„p „{„€„‚„p„q„|„‘
 //int shipGraphic = -1;
 //extern VectorI2 line[] = { {689,128},{848, 96},{1008, 128},
 //                    {1136, 224},{1192, 368},{1096, 509},
@@ -25,12 +26,19 @@ extern int shipGraphic;        // „C„‚„p„†„y„{„p „{„€„‚„p„q„|„‘
 //                    {655, 464},{785, 352},{960, 336},{960,476} };
 //const int line_size = sizeof(line) / sizeof(line[0]);
 //std::vector<Planet> planets;
+int patternShip;
+int walkCounter; // „R„‰„u„„„‰„y„{ „t„|„‘ „p„~„y„}„p„ˆ„y„y „{„€„‚„p„q„|„u„z
 void ShipInit() 
 {
+    shipGraphicEngine = LoadGraph("data\\texture\\humanShip\\engine.png");
     shipGraphic = LoadGraph("data\\texture\\humanShip\\battlecruiser.png");
     activeShips.clear(); // „O„‰„y„‹„p„u„} „}„p„ƒ„ƒ„y„r „{„€„‚„p„q„|„u„z
+    walkCounter = 0;
 }
 void ShipUpdate() {
+    patternShip = (walkCounter / 6) % 12;
+
+    walkCounter++;
     for (size_t i = 0; i < activeShips.size(); ) {
         // „T„r„u„|„y„‰„y„r„p„u„} „„‚„€„s„‚„u„ƒ„ƒ „t„r„y„w„u„~„y„‘ (5 „ƒ„u„{„…„~„t „~„p „r„u„ƒ„Ž „„…„„„Ž)
         activeShips[i].progress += 1.0f / (5.0f * 60.0f); // 60 FPS
@@ -92,7 +100,7 @@ void ShipDraw() {
 
         // „Q„y„ƒ„…„u„} „{„€„‚„p„q„|„Ž
         DrawRotaGraphF(x, y, 1.0f, angle, shipGraphic, TRUE);
-
+        DrawRectRotaGraph2(x-78, y-50, patternShip*128, 0, 128, 1536, 0, 0,1.0f, angle, shipGraphicEngine, TRUE, FALSE);
         // „O„„„€„q„‚„p„w„p„u„} „{„€„|„y„‰„u„ƒ„„„r„€ „{„€„‚„p„q„|„u„z
         DrawFormatStringF(x + 15, y - 10, GetColor(255, 255, 255), "%d", ship.count);
     }

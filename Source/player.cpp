@@ -197,7 +197,8 @@ namespace
 	//----------------------------------------------
 	float startPosX;
 	float startPosY;
-
+    VectorI2 newPos = line[currentPosition];
+    //VectorI2 pos = line[planets[selectedPlanetIdx].positionIndex];
 	int currentPosition = 0; // Текущая позиция в массиве line
     int selectedPlanetIdx = -1;
 	bool pressRight = false;
@@ -259,7 +260,8 @@ void PlayerDraw()
 {
 	
 	DrawRectGraph((int)pos.x, (int)pos.y, cell.x * 80, cell.y * 80, 96, 112, humanShipImage, true, xFlip);
-	DrawCircle(startPosX + PLANET_CENTER, startPosY + PLANET_CENTER, 42, 0XFFFFFF, false, 5.0f);
+	//DrawCircle(startPosX + PLANET_CENTER, startPosY + PLANET_CENTER, 50, 0XFFFFFF, false, 5.0f);
+    DrawCircle(pos.x + PLANET_CENTER, pos.y + PLANET_CENTER, 42, GetColor(255, 255, 0), false, 5.0f);
     DrawAvailableTransitions();
 }
 void PlayerRelease()
@@ -302,10 +304,41 @@ void PlayerMove()
             }
         }
     }
-    // 2. Обработка выбора и отправки кораблей (кнопка A)
-    bool pressedA = (CheckHitKey(KEY_INPUT_A) != 0);
+    //// 2. Обработка выбора и отправки кораблей (кнопка A)
+    //bool pressedA = (key & PAD_INPUT_A) != 0;
+    //if (pressedA && !pressA) {
+    //    // Находим текущую планету под контроллером
+    //    int currentPlanetIdx = -1;
+    //    for (size_t i = 0; i < planets.size(); i++) {
+    //        if (planets[i].positionIndex == currentPosition) {
+    //            currentPlanetIdx = i;
+    //            break;
+    //        }
+    //    }
+
+    //    if (currentPlanetIdx != -1) {
+    //        // Если это планета игрока
+    //        if (planets[currentPlanetIdx].type == PLAYER) {
+    //            // Первое нажатие - выбираем планету
+    //            if (selectedPlanetIdx == -1) {
+    //                selectedPlanetIdx = currentPlanetIdx;
+    //            }
+    //            // Второе нажатие на другую планету - отправка
+    //            else if (selectedPlanetIdx != currentPlanetIdx) {
+    //                SendShips(selectedPlanetIdx, currentPlanetIdx);
+    //                selectedPlanetIdx = -1;
+    //            }
+    //        }
+    //        // Сброс выбора при нажатии на нейтральную/вражескую планету
+    //        else {
+    //            selectedPlanetIdx = -1;
+    //        }
+    //    }
+    //}
+    // 
+    // 
+    bool pressedA = (key & PAD_INPUT_A) != 0;
     if (pressedA && !pressA) {
-        // Находим текущую планету под контроллером
         int currentPlanetIdx = -1;
         for (size_t i = 0; i < planets.size(); i++) {
             if (planets[i].positionIndex == currentPosition) {
@@ -315,24 +348,38 @@ void PlayerMove()
         }
 
         if (currentPlanetIdx != -1) {
-            // Если это планета игрока
-            if (planets[currentPlanetIdx].type == PLAYER) {
-                // Первое нажатие - выбираем планету
-                if (selectedPlanetIdx == -1) {
-                    selectedPlanetIdx = currentPlanetIdx;
-                }
-                // Второе нажатие на другую планету - отправка
-                else if (selectedPlanetIdx != currentPlanetIdx) {
-                    SendShips(selectedPlanetIdx, currentPlanetIdx);
-                    selectedPlanetIdx = -1;
-                }
+            // Выбор своей планеты
+            if (selectedPlanetIdx == -1 && planets[currentPlanetIdx].type == PLAYER) {
+                selectedPlanetIdx = currentPlanetIdx;
             }
-            // Сброс выбора при нажатии на нейтральную/вражескую планету
-            else {
+            // Отправка на другую планету
+            else if (selectedPlanetIdx != -1 && selectedPlanetIdx != currentPlanetIdx) {
+                // Проверяем допустимость перехода
+                bool validPath = false;
+                auto transitions = transitionMap.find(planets[selectedPlanetIdx].positionIndex);
+                if (transitions != transitionMap.end()) {
+                    for (const auto& trans : transitions->second) {
+                        if (trans.second == planets[currentPlanetIdx].positionIndex) {
+                            validPath = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (validPath) {
+                    SendShips(selectedPlanetIdx, currentPlanetIdx);
+                }
+                selectedPlanetIdx = -1;
+            }
+            // Сброс при нажатии на ту же планету
+            else if (selectedPlanetIdx == currentPlanetIdx) {
                 selectedPlanetIdx = -1;
             }
         }
     }
+    //pressA = pressedA;
+
+
     // 3. Обновляем состояния кнопок для следующего кадра
         pressRight = pressedRight;
         pressLeft = pressedLeft;
@@ -344,7 +391,7 @@ void PlayerMove()
         // 4. Отрисовка выделения выбранной планеты
         if (selectedPlanetIdx != -1) {
             VectorI2 pos = line[planets[selectedPlanetIdx].positionIndex];
-            DrawCircle(pos.x, pos.y, 40, GetColor(255, 255, 0), FALSE);
+            DrawCircle(pos.x, pos.y, 42, GetColor(255, 255, 0), false, 5.0f);
         }
 
         // 5. Перемещаем контроллер на текущую позицию
@@ -354,8 +401,8 @@ void PlayerMove()
 
 void MoveControllerTo(float x, float y)
 {
-	startPosX = x;
-	startPosY = y;
+    startPosX = x;
+    startPosY = y;
 }
 
 void DrawAvailableTransitions() {

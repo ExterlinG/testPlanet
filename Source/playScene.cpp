@@ -134,8 +134,9 @@ void PlaySceneInit()
 void PlaySceneUpdate()
 {
 	PlayerUpdate();
-	PlanetUpdate();
 	ShipUpdate();
+	PlanetUpdate();
+	
 
 	patternPlanet = (walkCounter / 6)% 77;
 
@@ -178,7 +179,7 @@ void PlaySceneUpdate()
 void PlaySceneDraw()
 {
 	
-
+	ClearDrawScreen();
 	//DrawRotaGraph(500, 500,1.0,45,lines,false, false);
 	DrawGraph(0, 0, galaxy, true);
 	DistanceMeter(170, 30);
@@ -195,7 +196,7 @@ void PlaySceneDraw()
 		//DrawRectRotaGraph2(1008 + PLANET_CENTER, 128 + PLANET_CENTER, patternLine * 16, 112, 80, 16, -48, 0, 1, planetAngle, lines, true, false);//lines gray 1- gray 2
 
 		//planet position
-		PlayerDraw();
+		
 		for (int i = 0; i < planet_size; i++)
 
 		{
@@ -204,6 +205,8 @@ void PlaySceneDraw()
 
 		PlanetDraw();
 		ShipDraw();
+		PlayerDraw();
+		ScreenFlip();
 		//DrawRectGraph(planet[18].x, planet[18].y, patternPlanet *96, 0, 96, 96, groundImage, true, false); //middle
 		//DrawRectGraph(planet[17].x, planet[17].y, patternPlanet * 96, 0, 96, 96, groundImage, true, false); //grey 15
 		//DrawRectGraph(planet[16].x, planet[16].y, patternPlanet * 96, 0, 96, 96, groundImage, true, false); //grey 14

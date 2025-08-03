@@ -11,6 +11,7 @@ extern std::vector<Ship> activeShips;
 extern VectorI2 line[];
 extern const std::unordered_map<int, std::vector<std::pair<int, int>>> transitionMap;
 extern const float SHIP_SPEED;
+extern int shipGraphicEngine;
 extern int shipGraphic;
 extern const int RIGHT;
 extern const int LEFT;

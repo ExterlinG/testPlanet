@@ -11,6 +11,7 @@ std::vector<Ship> activeShips;
 extern const float SHIP_SPEED = 5.0f;
 //extern int shipGraphicHandle;
 int shipGraphic = -1;
+int shipGraphicEngine = -1;
 //size_t LINE_SIZE = 19;
 VectorI2 line[] =  { { 689, 128 }, { 848, 96 }, { 1008, 128 },
 					{1136, 224},{1192, 368},{1096, 509},
