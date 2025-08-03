@@ -14,47 +14,57 @@
 
 
 void UpdateEnemyAI(std::vector<Planet>& planets, std::vector<Ship>& ships) {
-    for (size_t i = 0; i < planets.size(); i++) {
-        auto& planet = planets[i];
+    // „R„~„p„‰„p„|„p „€„q„~„€„r„|„‘„u„} „{„€„|„y„‰„u„ƒ„„„r„€ „{„€„‚„p„q„|„u„z „~„p „„|„p„~„u„„„p„‡
+    //for (auto& planet : planets) {
+    //    planet.shipsCount = 0;
+    //}
+    for (const auto& ship : ships) {
+        if (ship.currentPlanet) {
+            ship.currentPlanet->shipsCount++;
+        }
+    }
 
-        // „S„€„|„„{„€ „t„|„‘ „r„‚„p„w„u„ƒ„{„y„‡ „„|„p„~„u„„ (ENEMY1 „y„|„y ENEMY2)
-        if (planet.type != ENEMY1 && planet.type != ENEMY2) continue;
+    for (size_t fromIdx = 0; fromIdx < planets.size(); fromIdx++) {
+        auto& fromPlanet = planets[fromIdx];
 
-        // „E„ƒ„|„y „{„€„‚„p„q„|„u„z „q„€„|„„Š„u 10
-        if (planet.shipsCount > 10) {
-            // „P„€„|„…„‰„p„u„} „t„€„ƒ„„„…„„~„„u „„u„‚„u„‡„€„t„ „t„|„‘ „„„u„{„…„‹„u„z „„|„p„~„u„„„
-            auto it = transitionMap.find(planet.id);
-            if (it == transitionMap.end()) {
-                std::cout << "No transitions for planet " << planet.id << std::endl;
-                continue;
-            }
+        // „P„‚„€„r„u„‚„‘„u„} „„„€„|„„{„€ „r„‚„p„w„u„ƒ„{„y„u „„|„p„~„u„„„ (2 - ENEMY1, 3 - ENEMY2)
+        if (fromPlanet.type != 2 && fromPlanet.type != 3) continue;
 
-            // „I„‹„u„} „„u„‚„r„…„ „t„€„ƒ„„„…„„~„…„ „‰„…„w„…„ „„|„p„~„u„„„…
-            int targetIdx = -1;
-            for (auto& transition : it->second) {
-                int targetPlanetId = transition.second; // „A„u„‚„u„} „r„„„€„‚„€„z „„|„u„}„u„~„„ „„p„‚„ (ID „ˆ„u„|„u„r„€„z „„|„p„~„u„„„)
+        // „E„ƒ„|„y „{„€„‚„p„q„|„u„z „~„u„t„€„ƒ„„„p„„„€„‰„~„€ - „„‚„€„„…„ƒ„{„p„u„}
+        if (fromPlanet.shipsCount <= 10) continue;
 
-                // „N„p„‡„€„t„y„} „y„~„t„u„{„ƒ „„|„p„~„u„„„ „„€ ID
-                for (size_t j = 0; j < planets.size(); j++) {
-                    if (planets[j].id == targetPlanetId && planets[j].type != planet.type) {
-                        targetIdx = j;
+        std::cout << "Enemy planet " << fromPlanet.id
+            << " has " << fromPlanet.shipsCount << " ships\n";
+
+        // „I„‹„u„} „r„ƒ„u „t„€„ƒ„„„…„„~„„u „ˆ„u„|„y
+        for (size_t toIdx = 0; toIdx < planets.size(); toIdx++) {
+            if (fromIdx == toIdx) continue;
+
+            auto& toPlanet = planets[toIdx];
+            // „P„‚„€„r„u„‚„‘„u„}, „‰„„„€ „ˆ„u„|„ „t„‚„…„s„€„z „†„‚„p„{„ˆ„y„y
+            if (toPlanet.type == fromPlanet.type) continue;
+
+            // „P„‚„€„r„u„‚„‘„u„} „ƒ„…„‹„u„ƒ„„„r„€„r„p„~„y„u „„u„‚„u„‡„€„t„p
+            bool validPath = false;
+            auto transitions = transitionMap.find(fromPlanet.positionIndex);
+            if (transitions != transitionMap.end()) {
+                for (const auto& trans : transitions->second) {
+                    if (trans.second == toPlanet.positionIndex) {
+                        validPath = true;
                         break;
                     }
                 }
-
-                if (targetIdx != -1) break;
             }
 
-            // „E„ƒ„|„y „~„p„Š„|„y „t„€„„…„ƒ„„„y„}„…„ „ˆ„u„|„
-            if (targetIdx != -1) {
-                std::cout << "ENEMY AI: Sending ships from planet " << planet.id
-                    << " to " << planets[targetIdx].id << std::endl;
+            if (validPath) {
+                std::cout << "Valid path found: " << fromPlanet.id
+                    << " -> " << toPlanet.id << "\n";
 
-                // „I„ƒ„„€„|„„x„…„u„} „ƒ„…„‹„u„ƒ„„„r„…„„‹„…„ „†„…„~„{„ˆ„y„ „€„„„„‚„p„r„{„y
-                SendShips(i, targetIdx);
-            }
-            else {
-                std::cout << "No valid targets for planet " << planet.id << std::endl;
+                // „O„„„„‚„p„r„|„‘„u„} „B„R„E „{„€„‚„p„q„|„y („}„€„w„~„€ „y„x„}„u„~„y„„„ „~„p fromPlanet.shipsCount - 10)
+                SendShips(fromIdx, toIdx);
+
+                // „B„„‡„€„t„y„} „„€„ƒ„|„u „„u„‚„r„€„z „~„p„z„t„u„~„~„€„z „ˆ„u„|„y
+                break;
             }
         }
     }

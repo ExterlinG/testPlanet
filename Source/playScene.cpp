@@ -153,15 +153,29 @@ void PlaySceneInit()
 }
 void PlaySceneUpdate()
 {
-	PlayerUpdate();
+	//for (auto& planet : planets) {
+	//	planet.shipsCount = 0;
+	//}
+	//for (auto& ship : ships) {
+	//	if (ship.currentPlanet) {
+	//		ship.currentPlanet->shipsCount++;
+	//	}
+	//}
+
 	ShipUpdate();
+	PlayerUpdate();	
 	PlanetUpdate();
-	// „R„„„p„|„€ („u„ƒ„|„y ships - vector<shared_ptr<Ship>>):
 	std::vector<Ship> rawShips;
 	for (const auto& shipPtr : ships) {
 		if (shipPtr) rawShips.push_back(*shipPtr);
 	}
 	UpdateEnemyAI(planets, rawShips);
+	// „R„„„p„|„€ („u„ƒ„|„y ships - vector<shared_ptr<Ship>>):
+	//std::vector<Ship> rawShips;
+	//for (const auto& shipPtr : ships) {
+	//	if (shipPtr) rawShips.push_back(*shipPtr);
+	//}
+	//UpdateEnemyAI(planets, rawShips);
 	//UpdateEnemyLogic(1, planets, rawShips);
 	patternPlanet = (walkCounter / 6)% 77;
 
