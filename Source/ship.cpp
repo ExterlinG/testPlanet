@@ -1,20 +1,23 @@
 #include "types.h"
-#include "planet.h" // „D„|„‘ „t„€„ƒ„„„…„„p „{ planets
 #include "ship.h"
+#include "planet.h" // „D„|„‘ „t„€„ƒ„„„…„„p „{ planets
 #include "globalGameData.h"
+#include <vector>
 //#include "struct.h"
 #include "player.h"
 #include "math.h"
 #include "playScene.h"
 #include <algorithm>
 #include <unordered_map>
-#include <vector>
 
-// „C„|„€„q„p„|„„~„„u „„u„‚„u„}„u„~„~„„u „t„|„‘ „{„€„‚„p„q„|„u„z
-//std::vector<Ship> activeShips;
-//const float SHIP_SPEED = 5.0f;
+
+// „C„|„€„q„p„|„„~„„u „„u„‚„u„}„u„~„~„„u („€„„‚„u„t„u„|„u„~„ „r globalData.cpp)
+extern std::vector<Planet> planets;
+extern std::vector<Ship> activeShips;
+extern VectorI2 line[];  // „M„p„ƒ„ƒ„y„r „{„€„€„‚„t„y„~„p„„ „„„€„‰„u„{
+extern int shipGraphic;        // „C„‚„p„†„y„{„p „{„€„‚„p„q„|„‘
 //int shipGraphic = -1;
-//VectorI2 line[] = { {689,128},{848, 96},{1008, 128},
+//extern VectorI2 line[] = { {689,128},{848, 96},{1008, 128},
 //                    {1136, 224},{1192, 368},{1096, 509},
 //                    {1456, 428},{1408, 592},{1280, 720},
 //                    {1104, 768},{944, 704},{848, 560},
@@ -25,61 +28,72 @@
 void ShipInit() 
 {
     shipGraphic = LoadGraph("data\\texture\\humanShip\\battlecruiser.png");
-    activeShips.clear();
+    activeShips.clear(); // „O„‰„y„‹„p„u„} „}„p„ƒ„ƒ„y„r „{„€„‚„p„q„|„u„z
 }
 void ShipUpdate() {
-    int currentTime = GetNowCount();
-
     for (size_t i = 0; i < activeShips.size(); ) {
-        activeShips[i].progress = (currentTime - activeShips[i].startTime) / (SHIP_SPEED * 1000.0f);
+        // „T„r„u„|„y„‰„y„r„p„u„} „„‚„€„s„‚„u„ƒ„ƒ „t„r„y„w„u„~„y„‘ (5 „ƒ„u„{„…„~„t „~„p „r„u„ƒ„ „„…„„„)
+        activeShips[i].progress += 1.0f / (5.0f * 60.0f); // 60 FPS
 
+        // „E„ƒ„|„y „{„€„‚„p„q„|„y „t„€„|„u„„„u„|„y
         if (activeShips[i].progress >= 1.0f) {
-            Planet& fromPlanet = planets[activeShips[i].fromPlanetIndex];
-            Planet& toPlanet = planets[activeShips[i].toPlanetIndex];
+            Planet& fromPlanet = planets[activeShips[i].fromPlanetIdx];
+            Planet& toPlanet = planets[activeShips[i].toPlanetIdx];
 
+            // „L„€„s„y„{„p „q„€„‘:
             if (activeShips[i].count > toPlanet.shipsCount) {
-                toPlanet.type = fromPlanet.type;
+                // „H„p„‡„r„p„„ „„|„p„~„u„„„
+                toPlanet.type = fromPlanet.type; // „M„u„~„‘„u„} „r„|„p„t„u„|„„ˆ„p
                 toPlanet.shipsCount = activeShips[i].count - toPlanet.shipsCount;
             }
             else {
+                // „O„q„€„‚„€„~„p „…„ƒ„„u„Š„~„p
                 toPlanet.shipsCount -= activeShips[i].count;
             }
 
-            activeShips.erase(activeShips.begin() + i);
+            activeShips.erase(activeShips.begin() + i); // „T„t„p„|„‘„u„} „„‚„y„q„„r„Š„y„u „{„€„‚„p„q„|„y
         }
         else {
-            ++i;
+            i++;
         }
     }
 }
 
-void SendShips(int fromPlanet, int toPlanet, int count) {
-    if (fromPlanet < 0 || fromPlanet >= planets.size() ||
-        toPlanet < 0 || toPlanet >= planets.size() ||
-        count <= 0) return;
+void SendShips(int fromPlanetIdx, int toPlanetIdx) {
+    if (fromPlanetIdx == toPlanetIdx) return;
 
-    Ship newShip = {
-        fromPlanet,
-        toPlanet,
-        min(count, planets[fromPlanet].shipsCount),
-        0.0f,
-        GetNowCount()
-    };
+    Planet& fromPlanet = planets[fromPlanetIdx];
+    int availableShips = fromPlanet.shipsCount;
+    if (availableShips <= 0) return;
+
+    // „R„€„x„t„p„u„} „s„‚„…„„„… „{„€„‚„p„q„|„u„z
+    Ship newShip;
+    newShip.fromPlanetIdx = fromPlanetIdx;
+    newShip.toPlanetIdx = toPlanetIdx;
+    newShip.count = availableShips; // „O„„„„‚„p„r„|„‘„u„} „r„ƒ„u „{„€„‚„p„q„|„y
+    newShip.progress = 0.0f;
 
     activeShips.push_back(newShip);
-    planets[fromPlanet].shipsCount -= newShip.count;
+    fromPlanet.shipsCount = 0; // „B„ƒ„u „{„€„‚„p„q„|„y „…„|„u„„„u„|„y
 }
 
 void ShipDraw() {
     for (const auto& ship : activeShips) {
-        const VectorI2& fromPos = line[planets[ship.fromPlanetIndex].positionIndex];
-        const VectorI2& toPos = line[planets[ship.toPlanetIndex].positionIndex];
+        // „P„€„|„…„‰„p„u„} „{„€„€„‚„t„y„~„p„„„ „„|„p„~„u„„
+        const VectorI2& fromPos = line[planets[ship.fromPlanetIdx].positionIndex];
+        const VectorI2& toPos = line[planets[ship.toPlanetIdx].positionIndex];
 
+        // „P„‚„€„}„u„w„…„„„€„‰„~„p„‘ „„€„x„y„ˆ„y„‘
         float x = fromPos.x + (toPos.x - fromPos.x) * ship.progress;
         float y = fromPos.y + (toPos.y - fromPos.y) * ship.progress;
+
+        // „T„s„€„| „„€„r„€„‚„€„„„p „„€ „~„p„„‚„p„r„|„u„~„y„ „t„r„y„w„u„~„y„‘
         float angle = atan2(toPos.y - fromPos.y, toPos.x - fromPos.x);
 
+        // „Q„y„ƒ„…„u„} „{„€„‚„p„q„|„
         DrawRotaGraphF(x, y, 1.0f, angle, shipGraphic, TRUE);
+
+        // „O„„„€„q„‚„p„w„p„u„} „{„€„|„y„‰„u„ƒ„„„r„€ „{„€„‚„p„q„|„u„z
         DrawFormatStringF(x + 15, y - 10, GetColor(255, 255, 255), "%d", ship.count);
     }
 }

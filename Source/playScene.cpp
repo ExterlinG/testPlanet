@@ -136,6 +136,7 @@ void PlaySceneUpdate()
 	PlayerUpdate();
 	PlanetUpdate();
 	ShipUpdate();
+
 	patternPlanet = (walkCounter / 6)% 77;
 
 	walkCounter++;
@@ -171,7 +172,7 @@ void PlaySceneUpdate()
 	//Angle‚Æ‘¬“x‚ğ‘«‚µ‚ÄÀ•W‚ğ•Ï‚¦‚é
 	//enemyPosX = cos(planetAngle);
 	//enemyPosY = sin(planetAngle);
-	
+
 }
 
 void PlaySceneDraw()
@@ -381,7 +382,7 @@ void DrawLines(double planetAngle[])
 {
 	const int LINE_SPRITE_WIDTH = 16;
 	const int LINE_SPRITE_HEIGHT = 100;
-	for (int i = 0; i < line_size; i++)
+	for (int i = 0; i < LINE_SIZE; i++)
 	{
 		bool skipLine = (i == 5 || i == 11 || i == 18);
 

@@ -1,4 +1,5 @@
 #include "types.h"
+//#include "ship.h"
 #include "globalGameData.h"
 #include "DxLib.h"
 #include <vector>
@@ -7,9 +8,10 @@
 // „O„„‚„u„t„u„|„‘„u„} „s„|„€„q„p„|„„~„„u „„u„‚„u„}„u„~„~„„u
 std::vector<Planet> planets;
 std::vector<Ship> activeShips;
-const float SHIP_SPEED = 5.0f;
+extern const float SHIP_SPEED = 5.0f;
+//extern int shipGraphicHandle;
 int shipGraphic = -1;
-
+//size_t LINE_SIZE = 19;
 VectorI2 line[] =  { { 689, 128 }, { 848, 96 }, { 1008, 128 },
 					{1136, 224},{1192, 368},{1096, 509},
 					{1456, 428},{1408, 592},{1280, 720},

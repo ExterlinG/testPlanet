@@ -1,13 +1,14 @@
 #pragma once
+struct Ship;
+#include "ship.h"
 #include <vector>
 #include "planet.h"
-#include "ship.h"
 #include <unordered_map>
 //#include "struct.h"
-
+constexpr size_t LINE_SIZE = 19;
 extern std::vector<Planet> planets;
 extern std::vector<Ship> activeShips;
-extern const VectorI2 line[];
+extern VectorI2 line[];
 extern const std::unordered_map<int, std::vector<std::pair<int, int>>> transitionMap;
 extern const float SHIP_SPEED;
 extern int shipGraphic;
@@ -15,6 +16,7 @@ extern const int RIGHT;
 extern const int LEFT;
 extern const int UP;
 extern const int DOWN;
+
 //extern const int line_size = sizeof(line) / sizeof(line[0]);
 
 //struct VectorI2 {

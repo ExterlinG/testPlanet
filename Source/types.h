@@ -1,11 +1,11 @@
 #pragma once
 
 struct Vector2 {
-    int x, y;
+    float x, y;
 };
 
 struct VectorI2 {
-    int x, y;
+    float x, y;
 };
 
 enum PlanetType {

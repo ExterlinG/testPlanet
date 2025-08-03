@@ -1,20 +1,26 @@
 ﻿#include <DxLib.h>
+#include "ship.h"
+#include "globalGameData.h"
 #include <assert.h>
 #include "config.h"
 #include "types.h"
 //#include "struct.h"
 #include "planet.h"
-#include "ship.h"
 #include "player.h"
 #include <vector>
 #include <unordered_map>
-
 #include <algorithm>
-#include "globalGameData.h"
+
 
 
 namespace
 {
+    // Глобальные переменные (объявлены в globalData.h)
+    //extern std::vector<Planet> planets;
+    //extern const VectorI2 line[];
+    extern int currentPosition;
+    extern int selectedPlanetIdx;
+
 	static const float PLANET_CENTER = 48.0;
 	int humanShipImage = -1;
 	Vector2 pos;		//planetワギャンの座標
@@ -33,7 +39,7 @@ namespace
 	PlayerState state;
 	int key;	//ジョイパットの入力を確認する変数
 	//lines 
-	//VectorI2 line[] = { {689,128},{848, 96},{1008, 128},
+	//extern VectorI2 line[] = { {689,128},{848, 96},{1008, 128},
 	//					{1136, 224},{1192, 368},{1096, 509},
 	//					{1456, 428},{1408, 592},{1280, 720},
 	//					{1104, 768},{944, 704},{848, 560},
@@ -42,11 +48,11 @@ namespace
 	//const int line_size = sizeof(line) / sizeof(line[0]);
     //std::vector<Planet> planets;
 	
-	const std::pair<int, int> extraConnections[] = {
-		{3, 17}, {4, 17}, {5, 18}, {9, 5},
-		{10, 5}, {5, 11}, {11, 17}, {16, 11},
-		{18, 11}, {17, 5},{15, 11}
-	};
+	//const std::pair<int, int> extraConnections[] = {
+	//	{3, 17}, {4, 17}, {5, 18}, {9, 5},
+	//	{10, 5}, {5, 11}, {11, 17}, {16, 11},
+	//	{18, 11}, {17, 5},{15, 11}
+	//};
 
 	// Матрица допустимых переходов: [текущая_позиция] = {доступные_позиции}
     //const int RIGHT = 1;
@@ -192,7 +198,8 @@ namespace
 	float startPosX;
 	float startPosY;
 
-	int currentPosition;
+	int currentPosition = 0; // Текущая позиция в массиве line
+    int selectedPlanetIdx = -1;
 	bool pressRight = false;
 	bool pressLeft = false;
     bool pressUp = false;
@@ -201,7 +208,7 @@ namespace
     int selectedPlanetIndex = -1;
 }
 void Collision();
-void Move();
+//void Move();
 void DeadFall();
 int FindPlanetIndex(int position) {
     for (size_t i = 0; i < planets.size(); i++) {
@@ -214,7 +221,7 @@ int FindPlanetIndex(int position) {
 
 void PlayerInit()
 {
-	currentPosition = 0; // Текущая позиция в массиве line
+	
 	startPosX = line[0].x;
 	startPosY = line[0].y;
 	
@@ -271,71 +278,80 @@ void PlayerMove()
     bool pressedUp = (key & PAD_INPUT_UP) != 0;
     bool pressedDown = (key & PAD_INPUT_DOWN) != 0;
 
-    // 2. Формируем битовую маску только для новых нажатий
-	int inputDir = 0;
-    if (pressedRight && !pressRight) inputDir |= RIGHT;
-    if (pressedLeft && !pressLeft) inputDir |= LEFT;
-    if (pressedUp && !pressUp) inputDir |= UP;
-    if (pressedDown && !pressDown) inputDir |= DOWN;
-	
-    // 2. Ищем переходы для текущей позиции
-    auto it = transitionMap.find(currentPosition);
-    if (it != transitionMap.end()) {
-        // 3. Проверяем все возможные переходы
-        for (const auto& transition : it->second) {  // <- Изменили здесь
-            int dir = transition.first;    // Направление
-            int target = transition.second; // Целевая позиция
 
-            if (inputDir == dir) {
-                currentPosition = target;
-                MoveControllerTo(line[currentPosition].x, line[currentPosition].y);
+	
+    if ((pressedRight && !pressRight) || (pressedLeft && !pressLeft) ||
+        (pressedUp && !pressUp) || (pressedDown && !pressDown)) {
+        // 2. Формируем битовую маску только для новых нажатий
+        int inputDir = 0;
+        if (pressedRight && !pressRight) inputDir |= RIGHT;
+        if (pressedLeft && !pressLeft) inputDir |= LEFT;
+        if (pressedUp && !pressUp) inputDir |= UP;
+        if (pressedDown && !pressDown) inputDir |= DOWN;
+	    pressRight = pressedRight;
+	    pressLeft = pressedLeft;
+        pressUp = pressedUp;
+        pressDown = pressedDown;
+        auto it = transitionMap.find(currentPosition);
+        if (it != transitionMap.end()) {
+            for (const auto& transition : it->second) {
+                if (inputDir == transition.first) {
+                    currentPosition = transition.second;
+                    break;
+                }
+            }
+        }
+    }
+    // 2. Обработка выбора и отправки кораблей (кнопка A)
+    bool pressedA = (CheckHitKey(KEY_INPUT_A) != 0);
+    if (pressedA && !pressA) {
+        // Находим текущую планету под контроллером
+        int currentPlanetIdx = -1;
+        for (size_t i = 0; i < planets.size(); i++) {
+            if (planets[i].positionIndex == currentPosition) {
+                currentPlanetIdx = i;
                 break;
             }
         }
-    }
-	pressRight = pressedRight;
-	pressLeft = pressedLeft;
-    pressUp = pressedUp;
-    pressDown = pressedDown;
 
-    // 2. Обработка выбора и отправки кораблей (клавиша A)
-    bool pressedA = (key & PAD_INPUT_A) != 0;
-
-    if (pressedA && !pressA) {
-        int planetIndex = FindPlanetIndex(currentPosition);
-
-        if (planetIndex != -1) {
-            // Если это первое нажатие и планета игрока
-            if (selectedPlanetIndex == -1 && planets[planetIndex].type == PLAYER) {
-                selectedPlanetIndex = planetIndex;
+        if (currentPlanetIdx != -1) {
+            // Если это планета игрока
+            if (planets[currentPlanetIdx].type == PLAYER) {
+                // Первое нажатие - выбираем планету
+                if (selectedPlanetIdx == -1) {
+                    selectedPlanetIdx = currentPlanetIdx;
+                }
+                // Второе нажатие на другую планету - отправка
+                else if (selectedPlanetIdx != currentPlanetIdx) {
+                    SendShips(selectedPlanetIdx, currentPlanetIdx);
+                    selectedPlanetIdx = -1;
+                }
             }
-            // Если это второе нажатие на другую планету
-            else if (selectedPlanetIndex != -1 && selectedPlanetIndex != planetIndex) {
-                // Проверяем допустимость перехода
-                bool validTransition = false;
-                const auto& transitions = transitionMap.at(planets[selectedPlanetIndex].positionIndex);
-                for (const auto& trans : transitions) {
-                    if (trans.second == planets[planetIndex].positionIndex) {
-                        validTransition = true;
-                        break;
-                    }
-                }
-
-                if (validTransition) {
-                    // Отправляем все корабли
-                    int shipCount = planets[selectedPlanetIndex].shipsCount;
-                    SendShips(selectedPlanetIndex, planetIndex, shipCount);
-                }
-                selectedPlanetIndex = -1;
+            // Сброс выбора при нажатии на нейтральную/вражескую планету
+            else {
+                selectedPlanetIdx = -1;
             }
         }
     }
-    pressA = pressedA;
+    // 3. Обновляем состояния кнопок для следующего кадра
+        pressRight = pressedRight;
+        pressLeft = pressedLeft;
+        pressUp = pressedUp;
+        pressDown = pressedDown;
+        pressA = pressedA;
 
 
-	VectorI2 newPosition = line[currentPosition];
-	MoveControllerTo(newPosition.x, newPosition.y);
+        // 4. Отрисовка выделения выбранной планеты
+        if (selectedPlanetIdx != -1) {
+            VectorI2 pos = line[planets[selectedPlanetIdx].positionIndex];
+            DrawCircle(pos.x, pos.y, 40, GetColor(255, 255, 0), FALSE);
+        }
+
+        // 5. Перемещаем контроллер на текущую позицию
+        VectorI2 newPos = line[currentPosition];
+        MoveControllerTo(newPos.x, newPos.y);
 }
+
 void MoveControllerTo(float x, float y)
 {
 	startPosX = x;
