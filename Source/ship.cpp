@@ -4,6 +4,7 @@
 #include "globalGameData.h"
 #include <vector>
 //#include "struct.h"
+#include "UI.h"
 #include "player.h"
 #include "math.h"
 #include "playScene.h"
@@ -116,5 +117,32 @@ void ShipDraw() {
         DrawFormatStringF(x + 25 * cosf(angle),
             y + 25 * sinf(angle),
             GetColor(255, 255, 255), "%d", ship.count);
+    }
+}
+
+void OnShipCreated(PlanetType faction) {
+    switch (faction) {
+    case PLAYER: g_playerStats.shipsProduced++; break;
+    case ENEMY1: g_enemy1Stats.shipsProduced++; break;
+    case ENEMY2: g_enemy2Stats.shipsProduced++; break;
+    default: break;
+    }
+}
+
+void OnShipDestroyed(PlanetType attacker, PlanetType victim) {
+    // ÑTÑâÑuÑÑ ÑÖÑ~ÑyÑâÑÑÑÄÑwÑuÑ~Ñ~ÑçÑá Ñ{ÑÄÑÇÑpÑqÑ|ÑuÑz
+    switch (attacker) {
+    case PLAYER: g_playerStats.shipsDestroyed++; break;
+    case ENEMY1: g_enemy1Stats.shipsDestroyed++; break;
+    case ENEMY2: g_enemy2Stats.shipsDestroyed++; break;
+    default: break;
+    }
+
+    // ÑTÑâÑuÑÑ ÑÅÑÄÑÑÑuÑÇÑëÑ~Ñ~ÑçÑá Ñ{ÑÄÑÇÑpÑqÑ|ÑuÑz
+    switch (victim) {
+    case PLAYER: g_playerStats.shipsLost++; break;
+    case ENEMY1: g_enemy1Stats.shipsLost++; break;
+    case ENEMY2: g_enemy2Stats.shipsLost++; break;
+    default: break;
     }
 }

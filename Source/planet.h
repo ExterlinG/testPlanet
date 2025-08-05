@@ -27,3 +27,4 @@ void PlanetDraw();
 void PlanetRelease();
 
 void PlanetReset();
+void UpdatePlanetControl();

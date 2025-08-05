@@ -36,4 +36,4 @@ extern const int DOWN;
 //    float x, y;
 //};
 
-
+int GetWindowWidth();
