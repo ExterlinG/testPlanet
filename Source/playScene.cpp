@@ -9,7 +9,6 @@
 
 #include "player.h"
 #include "app.h"
-#include "UI.h"
 //#include "struct.h"
 #include "math.h"
 #include <vector>
@@ -123,11 +122,7 @@ void PlaySceneInit()
 		assert(distanceImage >= 0);
 	}
 	if (playSound < 0) {
-<<<<<<< HEAD
-		playSound = LoadSoundMem("data\\sound\\playSound\\playsound.wav");
-=======
 		playSound = LoadSoundMem("data\\sound\\playSound\\playSound.wav");
->>>>>>> parent of 1fdb669 (debug key included)
 		assert(playSound >= 0);
 	}
 	//planets.clear();
@@ -170,7 +165,6 @@ void PlaySceneUpdate()
 	ShipUpdate();
 	PlayerUpdate();	
 	PlanetUpdate();
-	UpdatePlanetControl();
 	std::vector<Ship> rawShips;
 	for (const auto& shipPtr : ships) {
 		if (shipPtr) rawShips.push_back(*shipPtr);
@@ -219,58 +213,6 @@ void PlaySceneUpdate()
 	//enemyPosX = cos(planetAngle);
 	//enemyPosY = sin(planetAngle);
 	
-<<<<<<< HEAD
-	//key = GetJoypadInputState(DX_INPUT_KEY_PAD1);
-	//bool pressedY = (key & PAD_INPUT_Y) != 0;
-	///*bool pressedY = (key & PAD_INPUT_Y) != 0;*/
-	//if (pressedY && !pressY) {
-	//	playerWon = false;
-	//    gameOver = true;
-	//	//ChangeScene(Scene::GAMEOVER);
-	//}
-	//pressY = pressedY;
-
-	//debug
-	//-----------------------------------------------------------------------
-	//key = GetJoypadInputState(DX_INPUT_KEY_PAD1);
-	//bool pressedY = (key & PAD_INPUT_Y) != 0;
-
-	//if (pressedY && !pressY) {
-	//	// „S„u„ƒ„„„€„r„„z „‚„u„w„y„} - „„u„‚„u„{„|„„‰„p„u„} „ƒ„€„ƒ„„„€„‘„~„y„‘ „„€ „{„‚„…„s„…
-	//	//static int testState = 0;
-	//	testState = (testState + 1) % 3;
-
-	//	switch (testState) {
-	//	case 0:
-	//		GameResult.isVictory = true;
-	//		GameResult.isLose = false;
-	//		GameResult.isTimeOver = false;
-	//		printf("„S„u„ƒ„„: „P„€„{„p„x„p„„„Ž „„{„‚„p„~ „P„O„A„E„D„@\n");
-	//		break;
-
-	//	case 1:
-	//		GameResult.isVictory = false;
-	//		GameResult.isLose = false;
-	//		GameResult.isTimeOver = true;
-	//		printf("„S„u„ƒ„„: „P„€„{„p„x„p„„„Ž „„{„‚„p„~ „P„O„Q„@„G„E„N„I„E\n");
-	//		break;
-
-	//	case 2:
-	//		GameResult.isVictory = false;
-	//		GameResult.isLose = false;
-	//		GameResult.isTimeOver = true;
-	//		printf("„S„u„ƒ„„: „P„€„{„p„x„p„„„Ž „„{„‚„p„~ TIME OVER\n");
-	//		break;
-	//	}
-
-	//	ChangeScene(Scene::GAMEOVER);
-	//	return;
-	//}
-	//pressY = pressedY;
-	//debug
-//-----------------------------------------------------------------------
-=======
->>>>>>> parent of 1fdb669 (debug key included)
 }
 
 void PlaySceneDraw()
@@ -303,9 +245,6 @@ void PlaySceneDraw()
 		PlanetDraw();
 		ShipDraw();
 		PlayerDraw();
-		DrawPlayerUI();
-		DrawEnemy1UI();
-		DrawEnemy2UI();
 		ScreenFlip();
 		//DrawRectGraph(planet[18].x, planet[18].y, patternPlanet *96, 0, 96, 96, groundImage, true, false); //middle
 		//DrawRectGraph(planet[17].x, planet[17].y, patternPlanet * 96, 0, 96, 96, groundImage, true, false); //grey 15

@@ -3,7 +3,6 @@
 #include "types.h"
 #include <assert.h>
 #include "config.h"
-#include "UI.h"
 //#include "struct.h"
 #include "player.h"
 #include <vector>
@@ -99,9 +98,3 @@ void PlanetDraw()
 void PlayerRelease();
 
 void PlanetReset();
-
-void UpdatePlanetControl() {
-    UpdateFactionStats(PLAYER);
-    UpdateFactionStats(ENEMY1);
-    UpdateFactionStats(ENEMY2);
-}

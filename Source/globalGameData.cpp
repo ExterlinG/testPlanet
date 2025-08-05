@@ -160,9 +160,3 @@ const std::unordered_map<int, std::vector<std::pair<int, int>>> transitionMap =
         {LEFT, 11}       // ÑBÑrÑuÑÇÑá Å® ÑÑÑÄÑâÑ{Ñp 11
     }}
 };       // {960,476} Å® {689,128}, {1096,509} ÑyÑ|Ñy {848,560}
-
-int GetWindowWidth() {
-    int width, height;
-    GetWindowSize(&width, &height);
-    return width;
-}
