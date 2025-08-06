@@ -9,6 +9,7 @@
 
 #include "player.h"
 #include "app.h"
+#include "UI.h"
 //#include "struct.h"
 #include "math.h"
 #include <vector>
@@ -29,7 +30,7 @@ namespace {
 		IN_PLAY,
 		AFTER_PLAY,
 	};
-	
+	//extern struct GameResult GameResult;
 	PlayStatus status;
 
 	int galaxy = -1;		//game‚Ì”wŒi‰æ‘œ‚Ìƒnƒ“ƒhƒ‹
@@ -97,10 +98,14 @@ namespace {
 	double enemyPosY = 96.0f;
 
 	std::vector<std::shared_ptr<Ship>> ships;
-
+	float gameTime = 0;
 	//debug
+	//bool gameOver = false;
 	int color;
 	static const bool DEBUG_FONT = true;
+	static int testState = 0;
+	int key;
+	bool pressY;
 };
 
 void PlaySceneInit()
@@ -165,6 +170,7 @@ void PlaySceneUpdate()
 	ShipUpdate();
 	PlayerUpdate();	
 	PlanetUpdate();
+	UpdatePlanetControl();
 	std::vector<Ship> rawShips;
 	for (const auto& shipPtr : ships) {
 		if (shipPtr) rawShips.push_back(*shipPtr);
@@ -245,6 +251,9 @@ void PlaySceneDraw()
 		PlanetDraw();
 		ShipDraw();
 		PlayerDraw();
+		DrawPlayerUI();
+		DrawEnemy1UI();
+		DrawEnemy2UI();
 		ScreenFlip();
 		//DrawRectGraph(planet[18].x, planet[18].y, patternPlanet *96, 0, 96, 96, groundImage, true, false); //middle
 		//DrawRectGraph(planet[17].x, planet[17].y, patternPlanet * 96, 0, 96, 96, groundImage, true, false); //grey 15
@@ -436,3 +445,86 @@ void DrawLines(double planetAngle[])
 	}
 }
 
+void GameEndCheck()
+{
+	//if (gameOver) return;
+
+	gameTime++;
+
+	// „P„‚„€„r„u„‚„{„p „…„ƒ„|„€„r„y„z „„€„q„u„t„/„„€„‚„p„w„u„~„y„‘
+	bool allPlayer = true;
+	bool allEnemy1 = true;
+	bool allEnemy2 = true;
+
+	for (Planet& planet : planets) {
+		if (planet.type != PLAYER) allPlayer = false;
+		if (planet.type != ENEMY1) allEnemy1 = false;
+		if (planet.type != ENEMY2) allEnemy2 = false;
+	}
+
+	// „R„q„‚„p„ƒ„„r„p„u„} „†„|„p„s„y „„u„‚„u„t „„‚„€„r„u„‚„{„€„z
+
+
+	// „P„‚„€„r„u„‚„{„p „…„ƒ„|„€„r„y„z
+	if (gameTime >= 300.0f) {
+		GameResult.isLose = false;
+		GameResult.isVictory = false;
+		GameResult.isTimeOver = true;
+		printf("Game Over: Time Over\n");
+	}
+	else if (allPlayer) {
+		GameResult.isLose = false;
+		GameResult.isVictory = false;
+		GameResult.isTimeOver = true;
+		printf("Game Over: Player Won\n");
+	}
+	else if (allEnemy1 || allEnemy2) {
+		GameResult.isLose = false;
+		GameResult.isVictory = false;
+		GameResult.isTimeOver = true;
+		printf("Game Over: Player Lose\n");
+	}
+
+	// „P„u„‚„u„{„|„„‰„u„~„y„u „ƒ„ˆ„u„~„
+	ChangeScene(Scene::GAMEOVER);
+	
+}
+
+
+void SceneSwitch()
+{
+	
+	key = GetJoypadInputState(DX_INPUT_KEY_PAD1);
+	bool pressedY = (key & PAD_INPUT_Y) != 0;
+
+	if (pressedY && !pressY) {
+		// testState „„„u„„u„‚„ „s„|„€„q„p„|„„~„p„‘ „t„|„‘ „†„p„z„|„p, „p „~„u „|„€„{„p„|„„~„p„‘ „t„|„‘ if
+		testState = (testState + 1) % 3;
+
+		switch (testState) {
+		case 0:
+			GameResult.isVictory = true;
+			GameResult.isLose = false;
+			GameResult.isTimeOver = false;
+			printf("„S„u„ƒ„„: „P„€„{„p„x„p„„„ „„{„‚„p„~ „P„O„A„E„D„@\n");
+			break;
+
+		case 1:
+			GameResult.isVictory = false;
+			GameResult.isLose = true;
+			GameResult.isTimeOver = false;
+			printf("„S„u„ƒ„„: „P„€„{„p„x„p„„„ „„{„‚„p„~ „P„O„Q„@„G„E„N„I„E\n");
+			break;
+
+		case 2:
+			GameResult.isVictory = false;
+			GameResult.isLose = false;
+			GameResult.isTimeOver = true;
+			printf("„S„u„ƒ„„: „P„€„{„p„x„p„„„ „„{„‚„p„~ TIME OVER\n");
+			break;
+		}
+
+		ChangeScene(Scene::GAMEOVER);
+	}
+	pressY = pressedY;
+}

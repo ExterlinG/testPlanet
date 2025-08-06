@@ -6,3 +6,4 @@ void GameOverSceneDraw();
 void GameOverSceneRelease();
 
 void GameOverSceneReset();
+void DrawGameOverStats();

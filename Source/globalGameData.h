@@ -18,6 +18,13 @@ extern const int RIGHT;
 extern const int LEFT;
 extern const int UP;
 extern const int DOWN;
+extern struct GameResultStruct {
+    bool isVictory = false;
+    bool isTimeOver = false;
+    bool isLose = false;
+};
+extern GameResultStruct GameResult;
+//extern struct GameResult GameResult;
 
 //extern const int line_size = sizeof(line) / sizeof(line[0]);
 
