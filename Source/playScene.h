@@ -12,5 +12,6 @@ void CalculatePlanetAngles(double planetAngle[]);
 void CalculateExtraAngles(double extraAngles[]);
 void DrawExtraLines(double extraAngles[]);
 void DrawLines(double planetAngle[]);
+void DrawTimer(int x, int y, int seconds);
 
 void GameEndCheck();

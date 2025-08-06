@@ -235,19 +235,20 @@ void PlayerInit()
 
 void PlayerReset()
 {
-	//pos.x = 300.0f;
-	//
-	//cell.x = 0;
-	//cell.y = 0;
-
-
-	//dead = false;
-
-	state = PlayerState::STAY;
-	//walkCounter = 0;
-	//deadCounter = 0;
-
-	xFlip = false;
+    pos.x = startPosX;
+    pos.y = startPosY;
+    cell.x = 0;
+    cell.y = 0;
+    xFlip = false;
+    dead = false;
+    state = PlayerState::STAY;
+    currentPosition = 0; // Начинаем с первой позиции
+    selectedPlanetIdx = -1; // Сброс выбранной планеты
+    pressRight = false;
+    pressLeft = false;
+    pressUp = false;
+    pressDown = false;
+	pressA = false;
 }
 
 void PlayerUpdate() 

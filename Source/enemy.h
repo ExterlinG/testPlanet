@@ -11,5 +11,6 @@
 
 
 void UpdateEnemyAI(std::vector<Planet>& planets, std::vector<Ship>& ships);
-
+void EnemyInit();
+void EnemyReset();
 #endif // ENEMY_H

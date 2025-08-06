@@ -18,6 +18,9 @@ void InitUI() {
     g_playerStats.portraitGraph = LoadGraph("data\\texture\\ui\\human.png");
     g_enemy1Stats.portraitGraph = LoadGraph("data\\texture\\ui\\orc.png");
     g_enemy2Stats.portraitGraph = LoadGraph("data\\texture\\ui\\robot1.png");
+    assert(g_playerStats.portraitGraph >= 0);
+    assert(g_enemy1Stats.portraitGraph >= 0);
+    assert(g_enemy2Stats.portraitGraph >= 0);
 }
 
 void UpdateFactionStats(PlanetType faction) {
@@ -64,4 +67,16 @@ void DrawEnemy1UI() {
 void DrawEnemy2UI() {
     DrawFactionUI(20, 264, g_enemy2Stats, GetColor(255, 200, 100));
     DrawCircle(50, 300, 35, GetColor(255, 165, 0), false, 5.0f);
+}
+void UIRelease() {
+    DeleteGraph(g_playerStats.portraitGraph);
+    DeleteGraph(g_enemy1Stats.portraitGraph);
+    DeleteGraph(g_enemy2Stats.portraitGraph);
+    DeleteFontToHandle(g_uiFont);
+}
+void UIReset() {
+    g_playerStats = { 0 };
+    g_enemy1Stats = { 0 };
+    g_enemy2Stats = { 0 };
+    InitUI();
 }

@@ -13,6 +13,11 @@ extern const float SHIP_SPEED = 5.0f;
 //extern GameResultStruct GameResult;
 GameResultStruct GameResult;
 //extern int shipGraphicHandle;
+
+int shipGraphicPlayer = -1;
+int shipGraphicEnemy1 = -1;
+int shipGraphicEnemy2 = -1;
+
 int shipGraphic = -1;
 int shipGraphicEngine = -1;
 //size_t LINE_SIZE = 19;

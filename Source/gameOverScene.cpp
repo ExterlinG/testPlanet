@@ -35,16 +35,9 @@ void GameOverSceneInit()
 }
 void GameOverSceneUpdate()
 {
-    if (!pushed) {
-        if (IsAllKeyPush()) {
-            pushed = true;
-            pushedCounter = 0;
-        }
-    }
-    else {
-        ++pushedCounter;
-        if (pushedCounter >= 30)
-            ChangeScene(Scene::TITLE);
+    int key = GetJoypadInputState(DX_INPUT_KEY_PAD1);
+    if ((key & PAD_INPUT_1) != 0) { // „K„~„€„„{„p "A"
+        ChangeScene(Scene::TITLE);
     }
 }
 void GameOverSceneDraw()
@@ -114,11 +107,11 @@ void GameOverSceneReset()
 void DrawGameOverStats() {
     int y = 200;
     DrawFormatStringToHandle(100, y, GetColor(255, 255, 255), g_uiFont,
-        "„I„s„‚„€„{: „T„~„y„‰„„„€„w„y„| %d „{„€„‚„p„q„|„u„z", g_playerStats.shipsDestroyed);
+        "Human: Destroed %d ships", g_playerStats.shipsDestroyed);
     y += 30;
     DrawFormatStringToHandle(100, y, GetColor(255, 100, 100), g_uiFont,
-        "„B„‚„p„s 1: „T„~„y„‰„„„€„w„y„| %d „{„€„‚„p„q„|„u„z", g_enemy1Stats.shipsDestroyed);
+        "Orc: Destroed %d ships", g_enemy1Stats.shipsDestroyed);
     y += 30;
     DrawFormatStringToHandle(100, y, GetColor(255, 200, 100), g_uiFont,
-        "„B„‚„p„s 2: „T„~„y„‰„„„€„w„y„| %d „{„€„‚„p„q„|„u„z", g_enemy2Stats.shipsDestroyed);
+        "Robot: Destroed %d ships", g_enemy2Stats.shipsDestroyed);
 }

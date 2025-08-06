@@ -98,6 +98,7 @@ namespace {
 	double enemyPosY = 96.0f;
 
 	std::vector<std::shared_ptr<Ship>> ships;
+	int startTime = 0;
 	float gameTime = 0;
 	//debug
 	//bool gameOver = false;
@@ -147,6 +148,8 @@ void PlaySceneInit()
 	ShipInit();
 	InitUI();
 	//ships.clear();
+	startTime = GetNowCount();
+	gameTime = 0;
 	walkCounter= 0;
 	patternLine = 0;
 	patternPlanet = 0;
@@ -184,6 +187,8 @@ void PlaySceneUpdate()
 	//}
 	//UpdateEnemyAI(planets, rawShips);
 	//UpdateEnemyLogic(1, planets, rawShips);
+	int now = GetNowCount();
+	gameTime = (now - startTime) / 1000; // „ƒ„u„{„…„~„t„
 	patternPlanet = (walkCounter / 6)% 77;
 
 	walkCounter++;
@@ -219,7 +224,7 @@ void PlaySceneUpdate()
 	//Angle‚Æ‘¬“x‚ğ‘«‚µ‚ÄÀ•W‚ğ•Ï‚¦‚é
 	//enemyPosX = cos(planetAngle);
 	//enemyPosY = sin(planetAngle);
-
+	GameEndCheck();
 }
 
 void PlaySceneDraw()
@@ -321,43 +326,10 @@ void PlaySceneDraw()
 			//DrawFormatString(20, 120, color, "XMove %f ", cos(planetAngle));
 			//DrawFormatString(20, 140, color, "YMove %f ", sin(planetAngle));
 		}
+		DrawTimer(170, 30, (int)gameTime);
 	}
 
-void PlaySceneRelease()
-{
-	PlayerRelease();
 
-	if (playSound > 0) {
-		DeleteSoundMem(playSound);
-		playSound = -1;
-	}
-	if (groundImage > 0) {
-		DeleteGraph(groundImage);
-		groundImage = -1;
-	}
-	if (galaxy > 0) {
-		DeleteGraph(galaxy);
-		galaxy = -1;
-	}
-	if (lines > 0) {
-		DeleteGraph(lines);
-		lines = -1;
-	}
-	if (distanceImage > 0) {
-		DeleteGraph(distanceImage);
-		distanceImage = -1;
-	}
-}
-
-void PlaySceneReset()
-{
-	status = PlayStatus::BEFORE_PLAY;
-	playTime = 0;
-	startCounter = 0;
-	deadCounter = 0;
-	PlaySoundMem(playSound, DX_PLAYTYPE_BACK);
-	PlayerReset();
-}
 
 //void DistanceMeter(int x, int y) {
 //	int meter = playTime / 5;
@@ -450,7 +422,7 @@ void GameEndCheck()
 {
 	//if (gameOver) return;
 
-	gameTime++;
+	//gameTime++;
 
 	// „P„‚„€„r„u„‚„{„p „…„ƒ„|„€„r„y„z „„€„q„u„t„/„„€„‚„p„w„u„~„y„‘
 	bool allPlayer = true;
@@ -472,22 +444,25 @@ void GameEndCheck()
 		GameResult.isVictory = false;
 		GameResult.isTimeOver = true;
 		printf("Game Over: Time Over\n");
+		ChangeScene(Scene::GAMEOVER);
 	}
 	else if (allPlayer) {
 		GameResult.isLose = false;
 		GameResult.isVictory = false;
 		GameResult.isTimeOver = true;
 		printf("Game Over: Player Won\n");
+		ChangeScene(Scene::GAMEOVER);
 	}
 	else if (allEnemy1 || allEnemy2) {
 		GameResult.isLose = false;
 		GameResult.isVictory = false;
 		GameResult.isTimeOver = true;
 		printf("Game Over: Player Lose\n");
+		ChangeScene(Scene::GAMEOVER);
 	}
 
 	// „P„u„‚„u„{„|„„‰„u„~„y„u „ƒ„ˆ„u„~„
-	ChangeScene(Scene::GAMEOVER);
+	
 	
 }
 
@@ -528,4 +503,62 @@ void SceneSwitch()
 		ChangeScene(Scene::GAMEOVER);
 	}
 	pressY = pressedY;
+}
+
+void DrawTimer(int x, int y, int seconds) {
+	
+	int copy = seconds;
+	int dig = 0;
+	do {
+		int digit = copy % 10;
+		
+		DrawRectGraph(x - (32 * dig), y, digit * 32, 0, 32, 64, distanceImage, true, false);
+		copy = copy / 10;
+		dig++;
+	} while (copy > 0);
+}
+void PlaySceneRelease()
+{
+
+
+	if (playSound > 0) {
+		DeleteSoundMem(playSound);
+		playSound = -1;
+	}
+	if (groundImage > 0) {
+		DeleteGraph(groundImage);
+		groundImage = -1;
+	}
+	if (galaxy > 0) {
+		DeleteGraph(galaxy);
+		galaxy = -1;
+	}
+	if (lines > 0) {
+		DeleteGraph(lines);
+		lines = -1;
+	}
+	if (distanceImage > 0) {
+		DeleteGraph(distanceImage);
+		distanceImage = -1;
+	}
+	PlayerRelease();
+	ShipRelease();
+	PlanetRelease();
+	UIRelease();
+
+}
+
+void PlaySceneReset()
+{
+	status = PlayStatus::BEFORE_PLAY;
+	playTime = 0;
+	walkCounter = 0;
+	lineWalkCounter = 0;
+	// „R„q„‚„€„ƒ „t„‚„…„s„y„‡ „„u„‚„u„}„u„~„~„„‡, „u„ƒ„|„y „~„…„w„~„€
+	PlayerReset();
+	ShipReset();
+	PlanetReset();
+	UIReset();
+	PlaySoundMem(playSound, DX_PLAYTYPE_BACK);
+
 }

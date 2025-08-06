@@ -28,12 +28,23 @@ extern int shipGraphicEngine;        // „C„‚„p„†„y„{„p „{„€„‚„p„q„|„‘
 //                    {655, 464},{785, 352},{960, 336},{960,476} };
 //const int line_size = sizeof(line) / sizeof(line[0]);
 //std::vector<Planet> planets;
+extern int shipGraphicPlayer;
+extern int shipGraphicEnemy1;
+extern int shipGraphicEnemy2;
+const int SHIP_SPRITE_WIDTH_PLAYER = 128;
+const int SHIP_SPRITE_WIDTH_ENEMY = 128;
+const int SHIP_SPRITE_HEIGHT = 128;
+const int SHIP_SPRITE_FRAMES_PLAYER = 12; // 1536 / 128
+const int SHIP_SPRITE_FRAMES_ENEMY = 8;   // 1024 / 128
 int patternShip;
 int walkCounter; // „R„‰„u„„„‰„y„{ „t„|„‘ „p„~„y„}„p„ˆ„y„y „{„€„‚„p„q„|„u„z
 void ShipInit() 
 {
     //shipGraphicEngine = LoadGraph("data\\texture\\humanShip\\engine.png");
-    shipGraphic = LoadGraph("data\\texture\\humanShip\\engine2.png");
+    //shipGraphic = LoadGraph("data\\texture\\humanShip\\engine2.png");
+    shipGraphicPlayer = LoadGraph("data\\texture\\humanShip\\engine2.png");
+    shipGraphicEnemy1 = LoadGraph("data\\texture\\orcShip\\orcShip.png");
+    shipGraphicEnemy2 = LoadGraph("data\\texture\\robotShip\\robotShip.png");
     activeShips.clear(); // „O„‰„y„‹„p„u„} „}„p„ƒ„ƒ„y„r „{„€„‚„p„q„|„u„z
     walkCounter = 0;
 }
@@ -101,24 +112,39 @@ void ShipDraw() {
         const VectorI2& fromPos = line[planets[ship.fromPlanetIdx].positionIndex];
         const VectorI2& toPos = line[planets[ship.toPlanetIdx].positionIndex];
 
-        // „P„€„x„y„ˆ„y„‘ „ƒ „y„~„„„u„‚„„€„|„‘„ˆ„y„u„z
-        float x = fromPos.x + (toPos.x  - fromPos.x )  * ship.progress;
-        float y = fromPos.y+ (toPos.y  - fromPos.y)  * ship.progress;
+        float x = fromPos.x + (toPos.x - fromPos.x) * ship.progress;
+        float y = fromPos.y + (toPos.y - fromPos.y) * ship.progress;
+        float angle = atan2(toPos.y - y, toPos.x - x) + DX_PI / 2;
 
-        // „P„‚„p„r„y„|„Ž„~„„z „‚„p„ƒ„‰„u„„ „…„s„|„p („~„€„ƒ „{ „ˆ„u„|„y)
-        float angle = atan2(toPos.y - y, toPos.x - x) + DX_PI / 2;; // „T„s„€„| „€„„ „„„u„{„…„‹„u„z „„€„x„y„ˆ„y„y „{ „ˆ„u„|„y
-
-        // 1. „Q„y„ƒ„…„u„} „€„ƒ„~„€„r„~„€„u „y„x„€„q„‚„p„w„u„~„y„u „{„€„‚„p„q„|„‘ („„€„r„u„‚„~„…„„„€„u „~„p angle)
-        DrawRectRotaGraph2(x+ PLANET_CENTER, y+ PLANET_CENTER, patternShip * 128, 0, 128, 1536, 64, 64, 1.0f, angle, shipGraphic, true, false);
-
-        //// 2. „Q„y„ƒ„…„u„} „t„r„y„s„p„„„u„|„y „ƒ „…„‰„u„„„€„} „„€„r„€„‚„€„„„p
-        //float engineOffsetX = -25.0f * cosf(angle); // „R„}„u„‹„u„~„y„u „~„p„x„p„t „„€ „€„ƒ„y „{„€„‚„p„q„|„‘
-        //float engineOffsetY = -25.0f * sinf(angle);
-
-        
-          
-
-        // 3. „O„„„€„q„‚„p„w„p„u„} „{„€„|„y„‰„u„ƒ„„„r„€ „{„€„‚„p„q„|„u„z
+        // „B„„q„€„‚ „y„x„€„q„‚„p„w„u„~„y„‘ „„€ „„„y„„…
+        int graphic = -1;
+        int spriteWidth = SHIP_SPRITE_WIDTH_PLAYER;
+        int frames = SHIP_SPRITE_FRAMES_PLAYER;
+        PlanetType type = planets[ship.fromPlanetIdx].type;
+        switch (type) {
+        case PLAYER:
+            graphic = shipGraphicPlayer;
+            spriteWidth = SHIP_SPRITE_WIDTH_PLAYER;
+            frames = SHIP_SPRITE_FRAMES_PLAYER;
+            break;
+        case ENEMY1:
+            graphic = shipGraphicEnemy1;
+            spriteWidth = SHIP_SPRITE_WIDTH_ENEMY;
+            frames = SHIP_SPRITE_FRAMES_ENEMY;
+            break;
+        case ENEMY2:
+            graphic = shipGraphicEnemy2;
+            spriteWidth = SHIP_SPRITE_WIDTH_ENEMY;
+            frames = SHIP_SPRITE_FRAMES_ENEMY;
+            break;
+        default:
+            graphic = shipGraphicPlayer;
+            break;
+        }
+        int pattern = (walkCounter / 6) % frames;
+        DrawRectRotaGraph2(x + PLANET_CENTER, y + PLANET_CENTER,
+            pattern * spriteWidth, 0, spriteWidth, SHIP_SPRITE_HEIGHT,
+            64, 64, 1.0f, angle, graphic, true, false);
         DrawFormatStringF(x + 25 * cosf(angle),
             y + 25 * sinf(angle),
             GetColor(255, 255, 255), "%d", ship.count);
@@ -149,4 +175,18 @@ void OnShipDestroyed(PlanetType attacker, PlanetType victim, int count) {
     case ENEMY2: g_enemy2Stats.shipsLost += count; break;
     default: break;
     }
+}
+void ShipRelease() {
+
+    if (shipGraphicPlayer >= 0) { DeleteGraph(shipGraphicPlayer); shipGraphicPlayer = -1; }
+    if (shipGraphicEnemy1 >= 0) { DeleteGraph(shipGraphicEnemy1); shipGraphicEnemy1 = -1; }
+    if (shipGraphicEnemy2 >= 0) { DeleteGraph(shipGraphicEnemy2); shipGraphicEnemy2 = -1; }
+
+
+}
+void ShipReset() {
+    activeShips.clear();
+    walkCounter = 0;
+    ShipRelease();
+    ShipInit();
 }

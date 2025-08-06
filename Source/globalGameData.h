@@ -14,6 +14,10 @@ extern const std::unordered_map<int, std::vector<std::pair<int, int>>> transitio
 extern const float SHIP_SPEED;
 extern int shipGraphicEngine;
 extern int shipGraphic;
+
+extern int shipGraphicPlayer;
+extern int shipGraphicEnemy1;
+extern int shipGraphicEnemy2;
 extern const int RIGHT;
 extern const int LEFT;
 extern const int UP;

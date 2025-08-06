@@ -97,9 +97,19 @@ void PlanetDraw()
         DrawString((pos.x + PLANET_CENTER)-5, (pos.y) - 15, shipsText, GetColor(255, 255, 255));
     }
 }
-void PlayerRelease();
+void PlanetRelease()
+{// „O„ƒ„r„€„q„€„w„t„u„~„y„u „‚„u„ƒ„…„‚„ƒ„€„r „„|„p„~„u„„
+	planets.clear();
+}
 
-void PlanetReset();
+void PlanetReset()
+{
+    PlayerRelease();
+    planets.clear();
+    PlanetInit();
+    // „R„q„‚„€„ƒ „ƒ„„„p„„„y„ƒ„„„y„{„y „†„‚„p„{„ˆ„y„z
+
+}
 
 
 

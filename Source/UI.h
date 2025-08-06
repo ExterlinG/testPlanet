@@ -30,5 +30,6 @@ void UpdateFactionStats(PlanetType faction);
 void DrawPlayerUI();
 void DrawEnemy1UI();
 void DrawEnemy2UI();
-
+void UIRelease();
+void UIReset();
 #endif
