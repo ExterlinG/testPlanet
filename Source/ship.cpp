@@ -39,41 +39,41 @@ void ShipInit()
 }
 void ShipUpdate() {
     patternShip = (walkCounter / 6) % 12;
-
     walkCounter++;
     for (size_t i = 0; i < activeShips.size(); ) {
-        // „T„r„u„|„y„‰„y„r„p„u„} „„‚„€„s„‚„u„ƒ„ƒ „t„r„y„w„u„~„y„‘ (5 „ƒ„u„{„…„~„t „~„p „r„u„ƒ„ „„…„„„)
         activeShips[i].progress += 1.0f / (5.0f * 60.0f); // 60 FPS
 
-        // „E„ƒ„|„y „{„€„‚„p„q„|„y „t„€„|„u„„„u„|„y
         if (activeShips[i].progress >= 1.0f) {
             Planet& fromPlanet = planets[activeShips[i].fromPlanetIdx];
             Planet& toPlanet = planets[activeShips[i].toPlanetIdx];
+            int attackCount = activeShips[i].count;
+            int defendCount = toPlanet.shipsCount;
+            PlanetType attacker = fromPlanet.type;
+            PlanetType defender = toPlanet.type;
 
-            // „L„€„s„y„{„p „q„€„‘:
-            if (fromPlanet.type == PLAYER && toPlanet.type == PLAYER) 
-            {
-                toPlanet.shipsCount = min(toPlanet.shipsCount + activeShips[i].count, 100);
-			}
-            else if (activeShips[i].count > toPlanet.shipsCount) {
+            if (attacker == PLAYER && defender == PLAYER) {
+                toPlanet.shipsCount = min(toPlanet.shipsCount + attackCount, 100);
+            }
+            else if (attackCount > defendCount) {
                 // „H„p„‡„r„p„„ „„|„p„~„u„„„
-                toPlanet.type = fromPlanet.type; // „M„u„~„‘„u„} „r„|„p„t„u„|„„ˆ„p
-                toPlanet.shipsCount = activeShips[i].count - toPlanet.shipsCount;
+                OnShipDestroyed(attacker, defender, defendCount); // „B„ƒ„u „x„p„‹„y„„„~„y„{„y „…„~„y„‰„„„€„w„u„~„
+                OnShipDestroyed(defender, attacker, defendCount); // „@„„„p„{„…„„‹„y„u, „{„€„„„€„‚„„u „„€„s„y„q„|„y
+                toPlanet.type = attacker;
+                toPlanet.shipsCount = attackCount - defendCount;
             }
             else {
                 // „O„q„€„‚„€„~„p „…„ƒ„„u„Š„~„p
-                toPlanet.shipsCount -= activeShips[i].count;
+                OnShipDestroyed(attacker, defender, attackCount); // „B„ƒ„u „p„„„p„{„…„„‹„y„u „„€„s„y„q„|„y
+                OnShipDestroyed(defender, attacker, attackCount); // „H„p„‹„y„„„~„y„{„y „„„€„w„u „„„u„‚„‘„„„ „ƒ„„„€„|„„{„€ „w„u
+                toPlanet.shipsCount -= attackCount;
             }
 
-            activeShips.erase(activeShips.begin() + i); // „T„t„p„|„‘„u„} „„‚„y„q„„r„Š„y„u „{„€„‚„p„q„|„y
-            
+            activeShips.erase(activeShips.begin() + i);
         }
         else {
             i++;
         }
-        
     }
-    
 }
 
 void SendShips(int fromPlanetIdx, int toPlanetIdx) {
@@ -91,7 +91,9 @@ void SendShips(int fromPlanetIdx, int toPlanetIdx) {
     newShip.progress = 0.0f;
 
     activeShips.push_back(newShip);
+    //OnShipCreated(fromPlanet.type, availableShips);
     fromPlanet.shipsCount = 0; // „B„ƒ„u „{„€„‚„p„q„|„y „…„|„u„„„u„|„y
+
 }
 
 void ShipDraw() {
@@ -123,7 +125,7 @@ void ShipDraw() {
     }
 }
 
-void OnShipCreated(PlanetType faction) {
+void OnShipCreated(PlanetType faction, int count) {
     switch (faction) {
     case PLAYER: g_playerStats.shipsProduced++; break;
     case ENEMY1: g_enemy1Stats.shipsProduced++; break;
@@ -132,20 +134,19 @@ void OnShipCreated(PlanetType faction) {
     }
 }
 
-void OnShipDestroyed(PlanetType attacker, PlanetType victim) {
+void OnShipDestroyed(PlanetType attacker, PlanetType victim, int count) {
     // „T„‰„u„„ „…„~„y„‰„„„€„w„u„~„~„„‡ „{„€„‚„p„q„|„u„z
     switch (attacker) {
-    case PLAYER: g_playerStats.shipsDestroyed++; break;
-    case ENEMY1: g_enemy1Stats.shipsDestroyed++; break;
-    case ENEMY2: g_enemy2Stats.shipsDestroyed++; break;
+    case PLAYER: g_playerStats.shipsDestroyed += count; break;
+    case ENEMY1: g_enemy1Stats.shipsDestroyed += count; break;
+    case ENEMY2: g_enemy2Stats.shipsDestroyed += count; break;
     default: break;
     }
-
     // „T„‰„u„„ „„€„„„u„‚„‘„~„~„„‡ „{„€„‚„p„q„|„u„z
     switch (victim) {
-    case PLAYER: g_playerStats.shipsLost++; break;
-    case ENEMY1: g_enemy1Stats.shipsLost++; break;
-    case ENEMY2: g_enemy2Stats.shipsLost++; break;
+    case PLAYER: g_playerStats.shipsLost += count; break;
+    case ENEMY1: g_enemy1Stats.shipsLost += count; break;
+    case ENEMY2: g_enemy2Stats.shipsLost += count; break;
     default: break;
     }
 }

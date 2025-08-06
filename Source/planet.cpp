@@ -59,6 +59,7 @@ void PlanetUpdate()
             if (currentTime - planet.lastSpawnTime > SPAWN_INTERVAL) 
             {
                 planet.shipsCount++;
+                OnShipCreated(planet.type, 1);
                 planet.lastSpawnTime = currentTime;
             }
         }

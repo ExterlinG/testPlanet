@@ -145,6 +145,7 @@ void PlaySceneInit()
 	PlanetInit();
 	PlayerInit();
 	ShipInit();
+	InitUI();
 	//ships.clear();
 	walkCounter= 0;
 	patternLine = 0;
@@ -218,7 +219,7 @@ void PlaySceneUpdate()
 	//Angle‚Æ‘¬“x‚ğ‘«‚µ‚ÄÀ•W‚ğ•Ï‚¦‚é
 	//enemyPosX = cos(planetAngle);
 	//enemyPosY = sin(planetAngle);
-	
+
 }
 
 void PlaySceneDraw()
@@ -227,7 +228,7 @@ void PlaySceneDraw()
 	ClearDrawScreen();
 	//DrawRotaGraph(500, 500,1.0,45,lines,false, false);
 	DrawGraph(0, 0, galaxy, true);
-	DistanceMeter(170, 30);
+	//DistanceMeter(170, 30);
 
 
 	//line
@@ -358,16 +359,16 @@ void PlaySceneReset()
 	PlayerReset();
 }
 
-void DistanceMeter(int x, int y) {
-	int meter = playTime / 5;
-	int copy = meter;
-	int dig = 0;
-	do {
-		DrawRectGraph(x - (32 * dig), y, copy % 10 * 32, 0, 32, 64, distanceImage, true, false);
-		copy = copy / 10;
-		dig++;
-	} while (copy > 0);
-}
+//void DistanceMeter(int x, int y) {
+//	int meter = playTime / 5;
+//	int copy = meter;
+//	int dig = 0;
+//	do {
+//		DrawRectGraph(x - (32 * dig), y, copy % 10 * 32, 0, 32, 64, distanceImage, true, false);
+//		copy = copy / 10;
+//		dig++;
+//	} while (copy > 0);
+//}
 
 void CalculatePlanetAngles(double planetAngle[]) {  // first lines „|„y„~„y„y „ƒ„r„‘„x„„r„p„„‹„y„u „„|„p„~„u„„„ „„€„ƒ„|„u„t„€„r„p„„„u„|„„~„€
 	for (int i = 0; i < planet_size; i++) {

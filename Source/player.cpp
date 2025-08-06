@@ -259,7 +259,7 @@ void PlayerUpdate()
 void PlayerDraw()
 {
 	
-	DrawRectGraph((int)pos.x, (int)pos.y, cell.x * 80, cell.y * 80, 96, 112, humanShipImage, true, xFlip);
+	//DrawRectGraph((int)pos.x, (int)pos.y, cell.x * 80, cell.y * 80, 96, 112, humanShipImage, true, xFlip);
 	//DrawCircle(startPosX + PLANET_CENTER, startPosY + PLANET_CENTER, 50, 0XFFFFFF, false, 5.0f);
     //DrawCircle(pos.x + PLANET_CENTER, pos.y + PLANET_CENTER, 42, GetColor(255, 255, 0), false, 5.0f);
     DrawAvailableTransitions();

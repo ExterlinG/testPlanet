@@ -7,6 +7,7 @@
 //#include "globalGameData.h"
 #include <memory>
 
+
 // „R„„„‚„…„{„„„…„‚„p „{„€„‚„p„q„|„‘ („x„p„r„y„ƒ„y„„ „„„€„|„„{„€ „€„„ „q„p„x„€„r„„‡ „„„y„„€„r)
 struct Ship 
 {
@@ -33,6 +34,8 @@ void SendShips(int fromPlanetIdx, int toPlanetIdx);
 void ClearAllShips();
 void ShipRelease();
 void ShipReset();
+void OnShipCreated(PlanetType faction, int count);
+void OnShipDestroyed(PlanetType attacker, PlanetType victim, int count);
 
 //// „R„„„‚„…„{„„„…„‚„p „{„€„‚„p„q„|„‘ („x„p„r„y„ƒ„y„„ „„„€„|„„{„€ „€„„ „q„p„x„€„r„„‡ „„„y„„€„r)
 //struct Ship 
